@@ -1,0 +1,20 @@
+# Ignorar node_modules de backend e mobile
+backend/node_modules/
+mobile/node_modules/
+
+# Ignorar arquivos de ambiente
+backend/.env
+mobile/.env
+
+# Ignorar logs do npm
+*.log
+
+# Ignorar pastas temporárias do Expo/React Native
+mobile/.expo/
+mobile/web-build/
+mobile/dist/
+
+# Ignorar arquivos de build (se houver)
+backend/dist/
+backend/build/
+
