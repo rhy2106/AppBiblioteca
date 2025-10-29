@@ -6,7 +6,7 @@ git clone git@github.com:rhy2106/AppBiblioteca.git
 ```
 ## instalar dependencias
 ```bash
-cd AppBiblioteca // pasta do repositorio
+cd AppBiblioteca # pasta do repositorio
 cd backend 
 npm install
 cd ../mobile
