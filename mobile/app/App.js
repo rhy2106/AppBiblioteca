@@ -1,6 +1,8 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import StackNavigator from './Navigation/StackNavigator';
+import { createStackNavigator } from '@react-navigation/stack';
+import { Autenticacao, InicioUsuario, InicioAdmin } from './navigation/';
+
+const Stack = createStackNavigator();
 
 class App extends React.Component{
 	constructor(props){
@@ -8,9 +10,21 @@ class App extends React.Component{
 	}
 	render(){
 		return(
-			<StackNavigator />
+			<Stack.Navigator>
+				<Stack.Screen name="autenticacao" component={Autenticacao} 
+					options={{ headerShown:false }}
+				/>
+				<Stack.Screen name="inicioUser" component={InicioUsuario}
+					options={{ headerShown:false }}
+				/>
+				<Stack.Screen name="inicioAdm" component={InicioAdmin}
+					options={{ headerShown:false }}
+				/>
+			</Stack.Navigator>
+			
 		);
 	}
 }
 
 export default App;
+

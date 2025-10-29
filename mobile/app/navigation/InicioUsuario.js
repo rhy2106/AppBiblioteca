@@ -1,11 +1,11 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import StackinNavigator from './StackinNavigator';
+import { Telas } from './';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 const Tab = createBottomTabNavigator();
 
-class Navigator2 extends React.Component{
+class Inicio extends React.Component{
 	constructor(props){
 		super(props);
 		console.log(this.props.route.params);
@@ -15,7 +15,7 @@ class Navigator2 extends React.Component{
 	render(){
 		return(
 			<Tab.Navigator>
-				<Tab.Screen name="stackin" component={StackinNavigator}
+				<Tab.Screen name="telas" component={Telas}
 				   initialParams={{
 						usuario:this.state.usuario,
 						email:this.state.email,
@@ -33,4 +33,4 @@ class Navigator2 extends React.Component{
 	}
 }
 
-export default Navigator2;
+export default Inicio;

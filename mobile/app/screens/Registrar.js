@@ -1,7 +1,6 @@
 import React from "react";
 import { View, Text, TextInput, Button, Alert, TouchableOpacity, StyleSheet, ScrollView, Pressable} from "react-native";
-import { hash } from "../Model/Hash.js";
-import { IP } from "../Model/Ip.js";
+import { ip } from '../model/';
 
 class Registrar extends React.Component {
 	constructor(props) {
@@ -21,7 +20,7 @@ class Registrar extends React.Component {
 		const { nome, autor, genero, descricao } = this.state;
 		if (!nome || !autor || !genero || !descricao) return;
 		try {
-			const res = await fetch(`http://${IP}/registrar_livro`, {
+			const res = await fetch(`http://${ip}/registrar_livro`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({ nome, autor, genero, descricao}),
@@ -41,7 +40,7 @@ class Registrar extends React.Component {
 		const { autor } = this.state;
 		if (!autor) return;
 		try {
-			const res = await fetch(`http://${IP}/registrar_autor`, {
+			const res = await fetch(`http://${ip}/registrar_autor`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({ autor }),
@@ -61,7 +60,7 @@ class Registrar extends React.Component {
 		const { genero } = this.state;
 		if (!genero) return;
 		try {
-			const res = await fetch(`http://${IP}/registrar_genero`, {
+			const res = await fetch(`http://${ip}/registrar_genero`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({ genero }),
@@ -79,7 +78,7 @@ class Registrar extends React.Component {
 	async pesquisar(){
 		const {pesquisa} = this.state;
 		try {
-			const res = await fetch(`http://${IP}/pesquisa`,{
+			const res = await fetch(`http://${ip}/pesquisa`,{
 				method:"POST",
 				headers: {"Content-Type":"application/json"},
 				body:JSON.stringify({pesquisa}),
@@ -95,7 +94,7 @@ class Registrar extends React.Component {
 		if (!livro) return;
 		console.log(livro.LID);
 		try {
-			const res = await fetch(`http://${IP}/registrar_livro_fisico`, {
+			const res = await fetch(`http://${ip}/registrar_livro_fisico`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({ livro }),

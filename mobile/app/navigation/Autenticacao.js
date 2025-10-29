@@ -1,13 +1,13 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Login, Cadastro } from '../Screen';
+import { Login, Cadastro } from '../screens';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 
 const Tab = createBottomTabNavigator();
 
-class Navigator1 extends React.Component{
+class Autenticacao extends React.Component{
 	constructor(props){
 		super(props);
 	}
@@ -31,4 +31,4 @@ class Navigator1 extends React.Component{
 	}
 }
 
-export default Navigator1;
+export default Autenticacao;

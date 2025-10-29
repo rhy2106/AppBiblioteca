@@ -1,10 +1,10 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import {Principal, Livro} from '../Screen'
+import {Principal, Livro} from '../screens'
 
 const Stack = createStackNavigator();
 
-class StackinNavigator extends React.Component{
+class Telas extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = this.props.route.params;
@@ -25,4 +25,4 @@ class StackinNavigator extends React.Component{
 	}
 }
 
-export default StackinNavigator;
+export default Telas;

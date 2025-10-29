@@ -1,19 +1,19 @@
 import React from "react";
 import { View, Text, TextInput, Button, Alert } from "react-native";
-import { hash } from "../Model/Hash.js";
-import { IP } from "../Model/Ip.js";
+import { ip, hash } from "../model/";
 
 class Login extends React.Component {
 	constructor(props) {
 		super(props);
 			this.state = { email: "", senha: "" };
+			console.log(ip);
 		}
 
 	async logar() {
 		const { email, senha } = this.state;
 		const hash_senha = hash(senha);
 		try {
-			const res = await fetch(`http://${IP}/login`, {
+			const res = await fetch(`http://${ip}/login`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({ email, senha: hash_senha }),
@@ -23,7 +23,7 @@ class Login extends React.Component {
 				Alert.alert("Erro: Email ou Senha Errados");
 			} else {
 				if(data.adm){
-					this.props.navigation.navigate("nav3",{
+					this.props.navigation.navigate("inicioAdm",{
 						usuario: data.usuario,
 						email: data.email,
 						genero: data.genero,
@@ -32,7 +32,7 @@ class Login extends React.Component {
 					});
 				}
 				else {
-					this.props.navigation.navigate("nav2", {
+					this.props.navigation.navigate("inicioUser", {
 						usuario: data.usuario,
 						email: data.email,
 						genero: data.genero,

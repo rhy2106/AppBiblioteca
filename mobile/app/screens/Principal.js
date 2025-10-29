@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, TextInput, Button, ScrollView, Alert, Pressable} from "react-native";
-import { IP } from "../Model/Ip.js";
+import { ip } from "../model/";
 
 class Principal extends React.Component{
 	constructor(props){
@@ -14,7 +14,7 @@ class Principal extends React.Component{
 	async pesquisar(){
 		const { pesquisa } = this.state;
 		try {
-			const res = await fetch(`http://${IP}/pesquisa`,{
+			const res = await fetch(`http://${ip}/pesquisa`,{
 				method: "POST",
 				headers: {"Content-Type":"application/json"},
 				body:JSON.stringify({ pesquisa}),

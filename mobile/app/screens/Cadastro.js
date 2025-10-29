@@ -1,7 +1,6 @@
 import React from "react";
 import { View, Text, TextInput, Button, Alert, TouchableOpacity, StyleSheet } from "react-native";
-import { hash } from "../Model/Hash.js";
-import { IP } from "../Model/Ip.js";
+import { ip,hash } from "../model/";
 
 class Cadastro extends React.Component {
 	constructor(props) {
@@ -21,7 +20,7 @@ class Cadastro extends React.Component {
 		const senha_hash = hash(senha);
 
 		try {
-			const res = await fetch(`http://${IP}/cadastrar`, {
+			const res = await fetch(`http://${ip}/cadastrar`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({ usuario, email, senha: senha_hash, genero }),

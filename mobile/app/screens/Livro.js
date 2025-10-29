@@ -1,7 +1,6 @@
 import React from "react";
 import { View, Text, TextInput, Button, Alert, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
-import { hash } from "../Model/Hash.js";
-import { IP } from "../Model/Ip.js";
+import { ip } from '../model/';
 
 class Livro extends React.Component {
 	constructor(props) {
@@ -21,7 +20,7 @@ class Livro extends React.Component {
 	async carregarAvaliacoes(){
 		const {LID} = this.state.livro;
 		try{
-			const res = await fetch(`http://${IP}/avaliacoes`,{
+			const res = await fetch(`http://${ip}/avaliacoes`,{
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({LID}),
@@ -40,7 +39,7 @@ class Livro extends React.Component {
 		const {comentario, nota} = this.state;
 		if(comentario == "" || nota == 0) return;
 		try{
-			const res = await fetch(`http://${IP}/comentar`,{
+			const res = await fetch(`http://${ip}/comentar`,{
 				method:"POST",
 				headers: {"Content-Type": "application/json"},
 				body: JSON.stringify({LID, UID, comentario, nota}),
