@@ -19,14 +19,15 @@ npm install
 > Talvez seja necessario modificar o arquivo AppBiblioteca/mobile/app/model/ip.js, altere para o seu IP ou dominio
 
 ## Rodar o banco de dados:
-> na pasta AppBiblioteca/backend execute:
+1. utilize o arquivo AppBiblioteca/backend/create_tables.sql, para criar a estrutura do banco de dados
+2. na pasta AppBiblioteca/backend execute:
 ```bash
 npm run dev
 ```
 
 ## Rodar o aplicativo mobile:
-> na pasta AppBiblioteca/mobile execute:
+1. na pasta AppBiblioteca/mobile execute:
 ```bash
 npx expo start
 ```
-> e então leia o QRcode que irá aparecer com o aplicativo *expo go*
+2. e então leia o QRcode que irá aparecer com o aplicativo *expo go*
