@@ -1,5 +1,5 @@
 # Como rodar o mvp localmente:
-##clonar repositorio
+## clonar repositorio
 > Obs: é preciso ter npm, nodejs instalado
 ```
 git clone git@github.com:rhy2106/AppBiblioteca.git
