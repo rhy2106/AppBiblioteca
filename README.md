@@ -1,4 +1,10 @@
-# Como rodar o mvp localmente:
+# Sumario
+- [Funções feitas](#funções-feitas)
+- [Como rodar o MVP localmente](#como-rodar-localmente)
+  - [Clonar repositório](#clonar-repositório)
+  - [Instalar dependências](#instalar-dependências)
+  - [Rodar o banco de dados](#rodar-o-banco-de-dados)
+  - [Rodar o aplicativo mobile](#rodar-o-aplicativo-mobile)
 ## Funções feitas
 - [X] Buscar livro
 - [X] Reservar livro
@@ -23,6 +29,7 @@
 - [ ] Sugerir melhorias
 - [ ] E-books
 
+# Como rodar localmente
 ## clonar repositorio
 > Obs: é preciso ter npm, nodejs instalado
 ```
