@@ -22,7 +22,7 @@ npm install
 1. utilize o arquivo AppBiblioteca/backend/create_tables.sql, para criar a estrutura do banco de dados
 2. na pasta AppBiblioteca/backend execute:
 ```bash
-npm run dev
+npm start
 ```
 
 ## Rodar o aplicativo mobile:

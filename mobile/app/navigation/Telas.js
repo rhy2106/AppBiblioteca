@@ -14,10 +14,8 @@ class Telas extends React.Component{
 			<Stack.Navigator>
 				<Stack.Screen name="principal" component={Principal} 
 					initialParams={{...this.state}}
-					options={{ headerShown:false }}
 				/>
 				<Stack.Screen name="Livro" component={Livro} 
-					options={{ headerShown:false }}
 				/>
 			</Stack.Navigator>
 			

@@ -58,6 +58,23 @@ class Livro extends React.Component {
 	}
 
 	async reservar(){
+		const {LID} = this.state.livro;
+		const {UID} = this.state.usuario;
+		try{
+			const res = await fetch(`http://${ip}/reservar`,{
+				method:"POST",
+				headers: {"Content-Type": "application/json"},
+				body: JSON.stringify({LID, UID}),
+			});
+			const data = await res.json();
+			if(data.success){
+					Alert.alert("Sucesso","Livro Reservado");
+			}
+			else
+				Alert.alert("Erro", data.mensagem);
+		} catch(err){
+			Alert.alert("erro ao conectar com o banco de dados",err);
+		}
 	}
 
 	render() {

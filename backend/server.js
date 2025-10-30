@@ -135,6 +135,167 @@ app.post('/registrar_genero', async (req,res) => {
 	}
 });
 
+app.post('/fila', async (req,res) => {
+	const { UID } = req.body;
+	try{
+		const result = await sql`
+			SELECT DISTINCT nome, autor, "Livros"."LID" as "LID", posicao, disponiveis
+				FROM "Fila_Emprestimo"
+				JOIN "Livros"
+					ON "Livros"."LID" = "Fila_Emprestimo"."LID"
+				JOIN (
+					SELECT
+						"UID",
+						"LID",
+						ROW_NUMBER() OVER (PARTITION BY "LID" ORDER BY "Data" ASC) AS posicao
+					FROM "Fila_Emprestimo"
+					WHERE "UID" = ${UID}
+				) AS p
+					ON p."UID" = "Fila_Emprestimo"."UID"
+						AND p."LID" = "Fila_Emprestimo"."LID"
+				JOIN (
+					SELECT "LID", COUNT(*) AS disponiveis
+					FROM "Copia_Fisica"
+					WHERE "Emprestado" = false
+					GROUP BY "LID"
+				) AS d
+					ON d."LID" = "Fila_Emprestimo"."LID"
+			WHERE "Fila_Emprestimo"."UID" = ${UID}
+		`;
+		res.json({success:true, data: result });
+	} catch(err){
+		console.log(err.message);
+		res.status(500).json({ success: false, mensagem: err.message });
+	}
+});
+
+app.post('/posicao', async (req,res) => {
+	const { UID, LID } = req.body;
+	try{
+		const result = await sql`
+			SELECT
+				"UID",
+				"LID",
+				ROW_NUMBER() OVER (PARTITION BY "LID" ORDER BY "Data" ASC) AS posicao
+			FROM "Fila_Emprestimo"
+			WHERE "LID" = ${LID}
+				AND "UID" = ${UID};
+		`;
+		res.json({posicao: result[0].posicao});
+	} catch(err){
+		res.status(500).json({ success: false, mensagem: err.message });
+	}
+});
+
+app.post('/disponivel', async (req,res) => {
+	const {LID} = req.body;
+	try{
+		const result = await sql`
+			SELECT COUNT(*) AS disponiveis
+			FROM "Copia_Fisica"
+			WHERE "LID" = ${LID}
+				AND "Emprestado" = false;
+		`;
+		res.json({disponiveis: result[0].disponiveis});
+	} catch(err){
+		res.status(500).json({ success: false, mensagem: err.message });
+	}
+});
+
+app.post('/reservar', async (req,res) => {
+	const { LID, UID } = req.body;
+	console.log( LID,UID);
+	try{
+		const result = await sql`
+			INSERT INTO "Fila_Emprestimo" ("LID", "UID")
+			VALUES (${LID}, ${UID})
+		`;
+		res.json({success:true, mensagem: 'Usuario adicionado a fila de espera' });
+	} catch(err){
+		if(err.code === '23505'){
+			res.status(400).json({ success: false, mensagem: 'o usuario já está na fila de espera!' });
+		} else{
+			res.status(500).json({ success: false, mensagem: err.message });
+		}
+	}
+});
+
+app.post('/emprestar', async (req,res) => {
+	const { UID, FID } = req.body;
+	try{
+		const id = await sql`
+			SELECT "LID"
+				FROM "Copia_Fisica"
+				WHERE "FID" = ${FID}
+		`;
+		const LID = id[0].LID;
+		const fila = await sql`
+			SELECT DISTINCT nome, autor, "Livros"."LID" as "LID", posicao, disponiveis
+				FROM "Fila_Emprestimo"
+				JOIN "Livros"
+					ON "Livros"."LID" = "Fila_Emprestimo"."LID"
+				JOIN (
+					SELECT
+						"UID",
+						"LID",
+						ROW_NUMBER() OVER (PARTITION BY "LID" ORDER BY "Data" ASC) AS posicao
+					FROM "Fila_Emprestimo"
+					WHERE "UID" = ${UID}
+				) AS p
+					ON p."UID" = "Fila_Emprestimo"."UID"
+						AND p."LID" = "Fila_Emprestimo"."LID"
+				JOIN (
+					SELECT "LID", COUNT(*) AS disponiveis
+					FROM "Copia_Fisica"
+					WHERE "Emprestado" = false
+					GROUP BY "LID"
+				) AS d
+					ON d."LID" = "Fila_Emprestimo"."LID"
+			WHERE "Fila_Emprestimo"."UID" = ${UID}
+				AND "Fila_Emprestimo"."LID" = ${LID}
+		`;
+		if(fila.length == 0){
+			res.json({success: false, mensagem: 'Usuario não fez reserva'});
+		} else if(fila[0].posicao <= fila[0].disponiveis){
+			const inserir = await sql`
+				INSERT INTO "Pegar_Emprestado" ("UID","FID")
+				VALUES (${UID}, ${FID})
+			`;
+
+			const atualiza = await sql`
+				UPDATE "Copia_Fisica"
+				SET "Emprestado" = TRUE
+			`;
+
+			const deleta = await sql`
+				DELETE FROM "Fila_Emprestimo"
+				WHERE "UID" = ${UID}
+					AND "LID" = ${LID}
+				);
+			`;
+			res.json({success:true, mensagem: 'Livro emprestado' });
+		} else{
+			res.json({success:false, mensagem: 'Não foi possivel emprestar o livro, Livro reservado' });
+		}
+	} catch(err){
+		res.status(500).json({ success: false, mensagem: err.message });
+	}
+});
+
+app.post('/devolver', async (req,res) => {
+	const { EID } = req.body;
+	try{
+		const result = await sql`
+			UPDATE "Pegar_Emprestado"
+			SET "Devolucao" = current_date
+			WHERE EID = ${EID};
+		`;
+		res.json({success:true, mensagem: 'Livro devolvido' });
+	} catch(err){
+		res.status(500).json({ success: false, mensagem: err.message });
+	}
+});
+
 app.post('/avaliacoes', async (req,res) => {
 	const {LID} = req.body;
 	try{

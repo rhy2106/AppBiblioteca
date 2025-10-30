@@ -6,7 +6,7 @@ class Principal extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = {
-			usuario: {...this.props.route.params},
+			...this.props.route.params,
 			pesquisa: "",
 			resultados: [],
 		}
