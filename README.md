@@ -1,8 +1,8 @@
 # Sumario
 - [Funções feitas](#funções-feitas)
 - [Como rodar o MVP localmente](#como-rodar-localmente)
-  - [Clonar repositório](#clonar-repositório)
-  - [Instalar dependências](#instalar-dependências)
+  - [Clonar repositório](#clonar-repositorio)
+  - [Instalar dependências](#instalar-dependencias)
   - [Rodar o banco de dados](#rodar-o-banco-de-dados)
   - [Rodar o aplicativo mobile](#rodar-o-aplicativo-mobile)
 ## Funções feitas
