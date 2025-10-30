@@ -7,23 +7,26 @@ class Fila extends React.Component{
 		super(props);
 		this.state = {
 			...this.props.route.params,
-			resultados: [],
+			livros_reservados: [],
+			livros_emprestados: [],
 		}
 	}
 	componentDidMount(){
 		const {navigation} = this.props;
-		this.livros();
+		this.reservados();
+		this.emprestados();
 		this.unsubscribeFocus = navigation.addListener("focus", () => {
-			this.livros();
+			this.reservados();
+			this.emprestados();
 		});
 	}
 	componentWillUnmount() {
-		if (this.unsubscribeFocus) {
+		if(this.unsubscribeFocus) {
 			this.unsubscribeFocus();
 		}
 	}
 
-	async livros(){
+	async reservados(){
 		const {UID} = this.state.usuario;
 		try{
 			const res = await fetch(`http://${ip}/fila`,{
@@ -32,7 +35,24 @@ class Fila extends React.Component{
 				body:JSON.stringify({ UID }),
 			});
 			const { data } = await res.json();
-			this.setState({ resultados: data });
+			console.log(data);
+			this.setState({ livros_reservados: data });
+		}catch(err){
+			Alert.alert("Erro ao connectar com o banco de dados");
+		}
+	}
+
+	async emprestados(){
+		const {UID} = this.state.usuario;
+		try{
+			const res = await fetch(`http://${ip}/emprestados`,{
+				method: "POST",
+				headers: {"Content-Type":"application/json"},
+				body:JSON.stringify({ UID }),
+			});
+			const { data } = await res.json();
+			console.log(data);
+			this.setState({ livros_emprestados: data });
 		}catch(err){
 			Alert.alert("Erro ao connectar com o banco de dados");
 		}
@@ -42,13 +62,23 @@ class Fila extends React.Component{
 		return(
 			<View>
 				<ScrollView style={{ marginTop: 10 }}>
-					{this.state.resultados.map((livro,index)=>(
+					<Text> Livros Reservados </Text>
+					{this.state.livros_reservados.map((livro,index)=>(
 						<View key={index}>
 							<Text> {livro.nome} </Text>
 							<Text> {livro.autor} </Text>
 							<Text>
 								{ livro.disponiveis >= livro.posicao ? "Disponivel" : "Indisponivel"}
 							</Text>
+						</View>
+					))}
+					<Text> Livros Emprestados </Text>
+					{this.state.livros_emprestados.map((livro,index)=>(
+						<View key={index}>
+							<Text> {livro.nome} </Text>
+							<Text> {livro.autor} </Text>
+							<Text> {"Emprestimo: " + new Date(livro.Emprestimo).toLocaleDateString('pt-BR')} </Text>
+							<Text> {"Prazo: " + new Date(livro.Prazo).toLocaleDateString('pt-BR')} </Text>
 						</View>
 					))}
 				</ScrollView>

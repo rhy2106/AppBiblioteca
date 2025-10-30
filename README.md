@@ -1,4 +1,28 @@
 # Como rodar o mvp localmente:
+## Funções feitas
+- [X] Buscar livro
+- [X] Reservar livro
+- [X] Registrar Emprestimo
+- [X] Registrar Devolucao
+- [X] Cadastrar Usuario
+- [X] Cadastrar Livro
+- [X] Cadastrar Autor
+- [X] Cadastrar Genero de Livro
+- [X] Controle de Estoque
+- [X] Login Admin/Usuario
+- [ ] Renovar Emprestimo
+- [X] Listar Livros atrasados
+- [X] Avaliar Livro
+- [ ] Historico de Emprestimo
+- [ ] Criar / Editar Lista de Livros
+- [ ] Historico de Busca
+- [ ] Controle de Usuarios
+- [ ] Tinder Livro
+- [ ] Doar Livro
+- [ ] Livros em Alta / Ranking
+- [ ] Sugerir melhorias
+- [ ] E-books
+
 ## clonar repositorio
 > Obs: é preciso ter npm, nodejs instalado
 ```

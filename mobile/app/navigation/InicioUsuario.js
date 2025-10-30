@@ -1,6 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Telas } from './';
+import { TelasUsuario } from './';
+import { Fila } from '../screens/';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 const Tab = createBottomTabNavigator();
@@ -8,24 +9,30 @@ const Tab = createBottomTabNavigator();
 class Inicio extends React.Component{
 	constructor(props){
 		super(props);
-		console.log(this.props.route.params);
-		this.state = this.props.route.params;
-		console.log(this.state);
+		this.state = {
+			usuario: this.props.route.params,
+		}
 	}
 	render(){
 		return(
 			<Tab.Navigator>
-				<Tab.Screen name="telas" component={Telas}
+				<Tab.Screen name="telasUsuario" component={TelasUsuario}
 				   initialParams={{
 						usuario:this.state.usuario,
-						email:this.state.email,
-						genero:this.state.genero,
-						pontuacao:this.state.pontuacao,
-						UID:this.state.UID,
 				   }}
 				   options={{
 						tabBarLabel: "Home",
-						tabBarIcon:({color,size}) => (<FontAwesome name="home" color={color} size={size}/>)
+						tabBarIcon:({color,size}) => (<FontAwesome name="home" color={color} size={size}/>),
+					   	headerShown: false
+					  }}
+				/>
+				<Tab.Screen name="fila" component={Fila}
+				   initialParams={{
+						usuario:this.state.usuario,
+				   }}
+				   options={{
+						tabBarLabel: "Fila",
+						tabBarIcon:({color,size}) => (<FontAwesome name="home" color={color} size={size}/>),
 					  }}
 				/>
 			</Tab.Navigator>

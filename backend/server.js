@@ -46,6 +46,20 @@ app.post('/pesquisa',async (req,res) => {
 		result = await sql`
 			SELECT *
 				FROM "Livros"
+				JOIN ( 
+					SELECT "LID", COUNT(*) AS quantidade
+						FROM "Copia_Fisica"
+					WHERE "Emprestado" = false
+					GROUP BY "LID"
+				) AS q
+					ON q."LID" = "Livros"."LID"
+				JOIN ( 
+					SELECT "LID", COUNT(*) AS disponiveis
+						FROM "Copia_Fisica"
+					WHERE "Emprestado" = false
+					GROUP BY "LID"
+				) AS d
+					ON d."LID" = "Livros"."LID"
 			LIMIT 50;
 		`;
 	}else{
@@ -137,6 +151,7 @@ app.post('/registrar_genero', async (req,res) => {
 
 app.post('/fila', async (req,res) => {
 	const { UID } = req.body;
+	console.log(UID);
 	try{
 		const result = await sql`
 			SELECT DISTINCT nome, autor, "Livros"."LID" as "LID", posicao, disponiveis
@@ -169,38 +184,29 @@ app.post('/fila', async (req,res) => {
 	}
 });
 
-app.post('/posicao', async (req,res) => {
-	const { UID, LID } = req.body;
+app.post('/emprestados', async (req,res) => {
+	const { UID } = req.body;
+	console.log(UID);
 	try{
 		const result = await sql`
-			SELECT
-				"UID",
-				"LID",
-				ROW_NUMBER() OVER (PARTITION BY "LID" ORDER BY "Data" ASC) AS posicao
-			FROM "Fila_Emprestimo"
-			WHERE "LID" = ${LID}
-				AND "UID" = ${UID};
+			SELECT *
+				FROM "Pegar_Emprestado"
+				JOIN "Copia_Fisica"
+					ON "Pegar_Emprestado"."FID" = "Copia_Fisica"."FID"
+				JOIN "Livros"
+					ON "Copia_Fisica"."LID" = "Livros"."LID"
+			WHERE "UID" = ${UID}
+				AND "Devolucao" IS NULL
+			ORDER BY "Emprestimo" ASC
 		`;
-		res.json({posicao: result[0].posicao});
+		console.log(result);
+		res.json({success:true, data: result });
 	} catch(err){
+		console.log(err.message);
 		res.status(500).json({ success: false, mensagem: err.message });
 	}
 });
 
-app.post('/disponivel', async (req,res) => {
-	const {LID} = req.body;
-	try{
-		const result = await sql`
-			SELECT COUNT(*) AS disponiveis
-			FROM "Copia_Fisica"
-			WHERE "LID" = ${LID}
-				AND "Emprestado" = false;
-		`;
-		res.json({disponiveis: result[0].disponiveis});
-	} catch(err){
-		res.status(500).json({ success: false, mensagem: err.message });
-	}
-});
 
 app.post('/reservar', async (req,res) => {
 	const { LID, UID } = req.body;

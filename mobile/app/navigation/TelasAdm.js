@@ -1,10 +1,10 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import {Principal, Livro} from '../screens'
+import {Estoque, Livro} from '../screens'
 
 const Stack = createStackNavigator();
 
-class Telas extends React.Component{
+class TelasAdm extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = this.props.route.params;
@@ -12,7 +12,7 @@ class Telas extends React.Component{
 	render(){
 		return(
 			<Stack.Navigator>
-				<Stack.Screen name="principal" component={Principal} 
+				<Stack.Screen name="estoque" component={Estoque}
 					initialParams={{...this.state}}
 				/>
 				<Stack.Screen name="Livro" component={Livro} 
@@ -23,4 +23,4 @@ class Telas extends React.Component{
 	}
 }
 
-export default Telas;
+export default TelasAdm;

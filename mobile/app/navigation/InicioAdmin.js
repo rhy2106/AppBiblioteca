@@ -1,7 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Registrar, Recepcao, Principal, Fila } from '../screens';
-import { Telas } from './';
+import { Registrar, Recepcao, Estoque } from '../screens';
+import { TelasAdm } from './';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 const Tab = createBottomTabNavigator();
@@ -18,12 +18,12 @@ class InicioAdmin extends React.Component{
 	render(){
 		return(
 			<Tab.Navigator>
-				<Tab.Screen name="telas" component={Telas}
+				<Tab.Screen name="telasAdm" component={TelasAdm}
 				   initialParams={{
 					   	usuario: this.state.usuario
 				   }}
 				   options={{
-						tabBarLabel: "pesquisa",
+						tabBarLabel: "estoque",
 						tabBarIcon:({color,size}) => (<FontAwesome name="home" color={color} size={size}/>),
 		   				headerShown: false,
 				  }}
@@ -43,15 +43,6 @@ class InicioAdmin extends React.Component{
 				   }}
 				   options={{
 						tabBarLabel: "Recepcao",
-						tabBarIcon:({color,size}) => (<FontAwesome name="home" color={color} size={size}/>),
-				  }}
-				/>
-				<Tab.Screen name="fila" component={Fila}
-				   initialParams={{
-						usuario:this.state.usuario,
-				   }}
-				   options={{
-						tabBarLabel: "fila",
 						tabBarIcon:({color,size}) => (<FontAwesome name="home" color={color} size={size}/>),
 				  }}
 				/>

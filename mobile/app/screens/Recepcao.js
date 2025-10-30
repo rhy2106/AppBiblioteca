@@ -44,7 +44,7 @@ class Recepcao extends React.Component {
 			});
 			const data = await res.json();
 			if(data.success){
-				Alert.alert("Sucesso", data.mensagem);
+				Alert.alert("Sucesso", data.mesagem);
 			}else
 				Alert.alert("Erro", data.mensagem);
 		} catch(err){
