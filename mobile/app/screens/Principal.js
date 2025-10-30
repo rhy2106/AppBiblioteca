@@ -38,6 +38,7 @@ class Principal extends React.Component{
 							<Text>Nome: {livro.nome}</Text>
 							<Text>Autor: {livro.autor}</Text>
 							<Text>Gênero: {livro.genero}</Text>
+							<Text>Nota: {livro.nota}</Text>
 						</Pressable>
 					))}
 				</ScrollView>

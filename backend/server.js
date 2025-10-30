@@ -44,6 +44,32 @@ app.post('/pesquisa',async (req,res) => {
 	let result;
 	if( pesquisa == "" ){
 		result = await sql`
+			SELECT *, COALESCE(a.nota, 0) AS nota
+				FROM "Livros"
+				JOIN ( 
+					SELECT "LID", COUNT(*) AS quantidade
+						FROM "Copia_Fisica"
+					WHERE "Emprestado" = false
+					GROUP BY "LID"
+				) AS q
+					ON q."LID" = "Livros"."LID"
+				JOIN ( 
+					SELECT "LID", COUNT(*) AS disponiveis
+						FROM "Copia_Fisica"
+					WHERE "Emprestado" = false
+					GROUP BY "LID"
+				) AS d
+					ON d."LID" = "Livros"."LID"
+				LEFT JOIN (
+					SELECT "LID", ROUND(SUM(nota)/COUNT("LID"),2) AS nota
+						FROM "Comentarios"
+					GROUP BY "LID"
+				) AS a
+					ON a."LID" = "Livros"."LID"
+			LIMIT 50;
+		`;
+	}else{
+		result = await sql`
 			SELECT *
 				FROM "Livros"
 				JOIN ( 
@@ -60,21 +86,15 @@ app.post('/pesquisa',async (req,res) => {
 					GROUP BY "LID"
 				) AS d
 					ON d."LID" = "Livros"."LID"
+			WHERE nome % ${pesquisa}
+				OR autor % ${pesquisa}
+				OR genero % ${pesquisa}
+			ORDER BY GREATEST(
+				similarity(nome, ${pesquisa}),
+				similarity(genero, ${pesquisa}),
+				similarity(autor, ${pesquisa})
+			) DESC
 			LIMIT 50;
-		`;
-	}else{
-		result = await sql`
-		  SELECT *
-			  FROM "Livros"
-		  WHERE nome % ${pesquisa}
-			 OR autor % ${pesquisa}
-			 OR genero % ${pesquisa}
-		  ORDER BY GREATEST(
-				  similarity(nome, ${pesquisa}),
-				  similarity(genero, ${pesquisa}),
-				  similarity(autor, ${pesquisa})
-				) DESC
-		  LIMIT 50;
 		`;
 	}
 	res.json(result);
@@ -266,7 +286,6 @@ app.post('/emprestar', async (req,res) => {
 		if(fila.length == 0){
 			res.json({success:false, mensagem: 'Não foi possivel emprestar o livro.\nLivro reservado por outra pessoa, ou Usuario não fez reserva.' });
 		} else if(fila[0].posicao <= fila[0].disponiveis){
-
 			await sql.begin(async tx => {
 				await tx`
 					INSERT INTO "Pegar_Emprestado" ("UID", "FID")
@@ -283,7 +302,6 @@ app.post('/emprestar', async (req,res) => {
 					AND "LID" = ${LID};
 				`;
 			});
-
 			res.json({success:true, mensagem: 'Livro emprestado' });
 		}
 	} catch(err){
@@ -309,14 +327,12 @@ app.post('/devolver', async (req,res) => {
 				RETURNING "Prazo", DATE_PART('day', now() - "Prazo") AS dias_atraso;
 			`;
 		});
-
 		if (result.length === 0) {
 			return res.json({
 				success: false,
 				mensagem: 'Nenhum empréstimo ativo encontrado para esse livro.',
 			});
 		}
-
 		const atraso = result[0].dias_atraso;
 		const mensagem = ( atraso > 0
 			? `Livro devolvido com ${atraso} dia(s) de atraso.`
