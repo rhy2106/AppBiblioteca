@@ -30,12 +30,12 @@
 - [ ] E-books
 
 # Como rodar localmente
-## clonar repositorio
+## Clonar repositorio
 > Obs: é preciso ter npm, nodejs instalado
 ```
 git clone git@github.com:rhy2106/AppBiblioteca.git
 ```
-## instalar dependencias
+## Instalar dependencias
 ```bash
 cd AppBiblioteca # pasta do repositorio
 cd backend 
