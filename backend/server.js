@@ -222,12 +222,14 @@ app.post('/reservar', async (req,res) => {
 
 app.post('/emprestar', async (req,res) => {
 	const { UID, FID } = req.body;
+	console.log(FID, UID);
 	try{
 		const id = await sql`
-			SELECT "LID"
+			SELECT *
 				FROM "Copia_Fisica"
 				WHERE "FID" = ${FID}
 		`;
+		console.log(id);
 		const LID = id[0].LID;
 		const fila = await sql`
 			SELECT DISTINCT nome, autor, "Livros"."LID" as "LID", posicao, disponiveis
@@ -254,28 +256,29 @@ app.post('/emprestar', async (req,res) => {
 			WHERE "Fila_Emprestimo"."UID" = ${UID}
 				AND "Fila_Emprestimo"."LID" = ${LID}
 		`;
+		console.log(fila);
 		if(fila.length == 0){
-			res.json({success: false, mensagem: 'Usuario não fez reserva'});
+			res.json({success:false, mensagem: 'Não foi possivel emprestar o livro.\nLivro reservado por outra pessoa, ou Usuario não fez reserva.' });
 		} else if(fila[0].posicao <= fila[0].disponiveis){
-			const inserir = await sql`
-				INSERT INTO "Pegar_Emprestado" ("UID","FID")
-				VALUES (${UID}, ${FID})
-			`;
 
-			const atualiza = await sql`
-				UPDATE "Copia_Fisica"
-				SET "Emprestado" = TRUE
-			`;
+			await sql.begin(async tx => {
+				await tx`
+					INSERT INTO "Pegar_Emprestado" ("UID", "FID")
+					VALUES (${UID}, ${FID});
+				`;
+				await tx`
+					UPDATE "Copia_Fisica"
+					SET "Emprestado" = TRUE
+					WHERE "FID" = ${FID};
+				`;
+				await tx`
+					DELETE FROM "Fila_Emprestimo"
+					WHERE "UID" = ${UID}
+					AND "LID" = ${LID};
+				`;
+			});
 
-			const deleta = await sql`
-				DELETE FROM "Fila_Emprestimo"
-				WHERE "UID" = ${UID}
-					AND "LID" = ${LID}
-				);
-			`;
 			res.json({success:true, mensagem: 'Livro emprestado' });
-		} else{
-			res.json({success:false, mensagem: 'Não foi possivel emprestar o livro, Livro reservado' });
 		}
 	} catch(err){
 		res.status(500).json({ success: false, mensagem: err.message });
@@ -283,14 +286,41 @@ app.post('/emprestar', async (req,res) => {
 });
 
 app.post('/devolver', async (req,res) => {
-	const { EID } = req.body;
+	const { UID,FID } = req.body;
 	try{
-		const result = await sql`
-			UPDATE "Pegar_Emprestado"
-			SET "Devolucao" = current_date
-			WHERE EID = ${EID};
-		`;
-		res.json({success:true, mensagem: 'Livro devolvido' });
+		const result = await sql.begin(async tx => {
+			await tx`
+				UPDATE "Copia_Fisica"
+				SET "Emprestado" = FALSE
+				WHERE "FID" = ${FID};
+			`;
+			return await tx`
+				UPDATE "Pegar_Emprestado"
+				SET "Devolucao" = now()
+				WHERE "UID" = ${UID}
+					AND "FID" = ${FID}
+					AND "Devolucao" IS NULL
+				RETURNING "Prazo", DATE_PART('day', now() - "Prazo") AS dias_atraso;
+			`;
+		});
+
+		if (result.length === 0) {
+			return res.json({
+				success: false,
+				mensagem: 'Nenhum empréstimo ativo encontrado para esse livro.',
+			});
+		}
+
+		const atraso = result[0].dias_atraso;
+		const mensagem = ( atraso > 0
+			? `Livro devolvido com ${atraso} dia(s) de atraso.`
+			: 'Livro devolvido dentro do prazo.'
+		);
+		return res.json({
+			success: true,
+			atraso,
+			mensagem,
+		});
 	} catch(err){
 		res.status(500).json({ success: false, mensagem: err.message });
 	}

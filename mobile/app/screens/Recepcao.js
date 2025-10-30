@@ -33,6 +33,25 @@ class Recepcao extends React.Component {
 		}
 	}
 
+	async devolver(){
+		const {UID, FID} = this.state;
+		if(!UID || !FID) return;
+		try{
+			const res = await fetch(`http://${ip}/devolver`, {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ UID, FID }),
+			});
+			const data = await res.json();
+			if(data.success){
+				Alert.alert("Sucesso", data.mensagem);
+			}else
+				Alert.alert("Erro", data.mensagem);
+		} catch(err){
+			Alert.alert("Erro", "Não foi possível conectar ao servidor");
+		}
+	}
+
 	render() {
 		const op = ["Emprestar","Devolver"]
 		return (
