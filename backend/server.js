@@ -147,11 +147,13 @@ app.post('/buscar',async (req,res) => {
 					ON r."UID" = "Usuarios"."UID"
 			WHERE usuario % ${pesquisa}
 				OR email % ${pesquisa}
-				OR "Usuarios"."UID" % ${pesquisa}
+				OR genero % ${pesquisa}
+				OR "Usuarios"."UID"::text % ${pesquisa}
 			ORDER BY GREATEST(
 				similarity(usuario, ${pesquisa}),
 				similarity(email, ${pesquisa}),
-				similarity("Usuarios"."UID", ${pesquisa})
+				similarity(genero, ${pesquisa}),
+				similarity("Usuarios"."UID"::text, ${pesquisa})
 			) DESC
 			LIMIT 50;
 		`;
