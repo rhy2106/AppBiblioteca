@@ -22,7 +22,9 @@
 - [X] Historico de Emprestimo
 - [ ] Criar / Editar Lista de Livros
 - [ ] Historico de Busca
-- [ ] Controle de Usuarios
+- [X] Listar Usuarios
+- [X] Ver historico de Usuarios
+- [ ] Barrar emprestimos de usuario
 - [ ] Tinder Livro
 - [ ] Doar Livro
 - [ ] Livros em Alta / Ranking
