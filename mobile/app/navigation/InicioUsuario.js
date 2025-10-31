@@ -1,7 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { TelasUsuario } from './';
-import { Fila } from '../screens/';
+import { Fila, Perfil } from '../screens/';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 const Tab = createBottomTabNavigator();
@@ -26,6 +26,17 @@ class Inicio extends React.Component{
 					   	headerShown: false
 					  }}
 				/>
+
+				<Tab.Screen name="perfil" component={Perfil}
+				   initialParams={{
+						usuario:this.state.usuario,
+				   }}
+				   options={{
+						tabBarLabel: "Perfil",
+						tabBarIcon:({color,size}) => (<FontAwesome name="home" color={color} size={size}/>),
+					  }}
+				/>
+			
 				<Tab.Screen name="fila" component={Fila}
 				   initialParams={{
 						usuario:this.state.usuario,
@@ -35,6 +46,7 @@ class Inicio extends React.Component{
 						tabBarIcon:({color,size}) => (<FontAwesome name="home" color={color} size={size}/>),
 					  }}
 				/>
+				
 			</Tab.Navigator>
 		);
 	}

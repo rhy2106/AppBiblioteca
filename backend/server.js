@@ -70,7 +70,7 @@ app.post('/pesquisa',async (req,res) => {
 		`;
 	}else{
 		result = await sql`
-			SELECT *
+			SELECT *, COALESCE(a.nota, 0) AS nota
 				FROM "Livros"
 				JOIN ( 
 					SELECT "LID", COUNT(*) AS quantidade
@@ -86,6 +86,12 @@ app.post('/pesquisa',async (req,res) => {
 					GROUP BY "LID"
 				) AS d
 					ON d."LID" = "Livros"."LID"
+				LEFT JOIN (
+					SELECT "LID", ROUND(SUM(nota)/COUNT("LID"),2) AS nota
+						FROM "Comentarios"
+					GROUP BY "LID"
+				) AS a
+					ON a."LID" = "Livros"."LID"
 			WHERE nome % ${pesquisa}
 				OR autor % ${pesquisa}
 				OR genero % ${pesquisa}
@@ -227,6 +233,34 @@ app.post('/emprestados', async (req,res) => {
 	}
 });
 
+app.post('/historico', async (req,res) => {
+	const { UID } = req.body;
+	console.log(UID);
+	try{
+		const result = await sql`
+			SELECT 
+				"Pegar_Emprestado"."FID" AS "FID",
+				"Livros"."LID" AS "LID",
+				"nome",
+				"autor",
+				"Prazo",
+				"Emprestimo",
+				COALESCE("Devolucao", '2000-01-01'::date) AS "Devolucao"
+				FROM "Pegar_Emprestado"
+				JOIN "Copia_Fisica"
+					ON "Pegar_Emprestado"."FID" = "Copia_Fisica"."FID"
+				JOIN "Livros"
+					ON "Copia_Fisica"."LID" = "Livros"."LID"
+			WHERE "UID" = ${UID}
+			ORDER BY "Emprestimo" ASC
+		`;
+		console.log(result);
+		res.json({success:true, data: result });
+	} catch(err){
+		console.log(err.message);
+		res.status(500).json({ success: false, mensagem: err.message });
+	}
+});
 
 app.post('/reservar', async (req,res) => {
 	const { LID, UID } = req.body;

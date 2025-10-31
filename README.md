@@ -19,7 +19,7 @@
 - [ ] Renovar Emprestimo
 - [X] Listar Livros atrasados
 - [X] Avaliar Livro
-- [ ] Historico de Emprestimo
+- [X] Historico de Emprestimo
 - [ ] Criar / Editar Lista de Livros
 - [ ] Historico de Busca
 - [ ] Controle de Usuarios

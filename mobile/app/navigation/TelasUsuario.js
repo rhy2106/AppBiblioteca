@@ -1,6 +1,6 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import {Principal, Livro} from '../screens'
+import {Principal, Livro, Historico} from '../screens'
 
 const Stack = createStackNavigator();
 
@@ -16,6 +16,10 @@ class TelasUsuario extends React.Component{
 					initialParams={{...this.state}}
 				/>
 				<Stack.Screen name="Livro" component={Livro} 
+					initialParams={{...this.state}}
+				/>
+				<Stack.Screen name="historico" component={Historico} 
+					initialParams={{...this.state}}
 				/>
 			</Stack.Navigator>
 			
