@@ -10,7 +10,7 @@ app.post('/login', async (req,res) => {
 	try{
 		const result = await sql`
 			SELECT *
-				FROM "Usuarios"
+			FROM "Usuarios"
 			WHERE email = ${email}`
 		if(result.length === 0 || result[0].senha != senha){
 			res.status(401).json({mensagem: "Usuario não encontrado"});
@@ -44,54 +44,66 @@ app.post('/pesquisa',async (req,res) => {
 	let result;
 	if( pesquisa == "" ){
 		result = await sql`
-			SELECT *, COALESCE(a.nota, 0) AS nota
-				FROM "Livros"
+			SELECT
+				"Livros"."LID" AS "LID",
+				"Livros".nome AS nome,
+				"Livros".autor AS autor,
+				"Livros".genero AS genero,
+				q.quantidade AS quantidade,
+				d.disponiveis AS disponiveis,
+				COALESCE(a.nota, 0) AS nota
+			FROM "Livros"
 				JOIN ( 
 					SELECT "LID", COUNT(*) AS quantidade
 						FROM "Copia_Fisica"
-					WHERE "Emprestado" = false
 					GROUP BY "LID"
 				) AS q
-					ON q."LID" = "Livros"."LID"
-				JOIN ( 
+					ON "Livros"."LID" = q."LID"
+				LEFT JOIN ( 
 					SELECT "LID", COUNT(*) AS disponiveis
 						FROM "Copia_Fisica"
 					WHERE "Emprestado" = false
 					GROUP BY "LID"
 				) AS d
-					ON d."LID" = "Livros"."LID"
+					ON "Livros"."LID" = d."LID"
 				LEFT JOIN (
 					SELECT "LID", ROUND(SUM(nota)/COUNT("LID"),2) AS nota
 						FROM "Comentarios"
 					GROUP BY "LID"
 				) AS a
-					ON a."LID" = "Livros"."LID"
+					ON "Livros"."LID" = a."LID"
 			LIMIT 50;
 		`;
 	}else{
 		result = await sql`
-			SELECT *, COALESCE(a.nota, 0) AS nota
-				FROM "Livros"
+			SELECT
+				"Livros"."LID" AS "LID",
+				"Livros".nome AS nome,
+				"Livros".autor AS autor,
+				"Livros".genero AS genero,
+				q.quantidade AS quantidade,
+				d.disponiveis AS disponiveis,
+				COALESCE(a.nota, 0) AS nota
+			FROM "Livros"
 				JOIN ( 
 					SELECT "LID", COUNT(*) AS quantidade
 						FROM "Copia_Fisica"
-					WHERE "Emprestado" = false
 					GROUP BY "LID"
 				) AS q
-					ON q."LID" = "Livros"."LID"
-				JOIN ( 
+					ON "Livros"."LID" = q."LID"
+				LEFT JOIN ( 
 					SELECT "LID", COUNT(*) AS disponiveis
 						FROM "Copia_Fisica"
 					WHERE "Emprestado" = false
 					GROUP BY "LID"
 				) AS d
-					ON d."LID" = "Livros"."LID"
+					ON "Livros"."LID" = d."LID"
 				LEFT JOIN (
 					SELECT "LID", ROUND(SUM(nota)/COUNT("LID"),2) AS nota
 						FROM "Comentarios"
 					GROUP BY "LID"
 				) AS a
-					ON a."LID" = "Livros"."LID"
+					ON "Livros"."LID" = a."LID"
 			WHERE nome % ${pesquisa}
 				OR autor % ${pesquisa}
 				OR genero % ${pesquisa}
@@ -112,7 +124,7 @@ app.post('/buscar',async (req,res) => {
 	if( pesquisa == "" ){
 		result = await sql`
 			SELECT *, COALESCE(a.atrasados, 0) AS atrasados, COALESCE(r.reservados, 0) AS reservados
-				FROM "Usuarios"
+			FROM "Usuarios"
 				LEFT JOIN ( 
 					SELECT "UID", COUNT(*) AS atrasados
 						FROM "Pegar_Emprestado"
@@ -131,7 +143,7 @@ app.post('/buscar',async (req,res) => {
 	}else{
 		result = await sql`
 			SELECT *, COALESCE(a.atrasados, 0) AS atrasados, COALESCE(r.reservados, 0) AS reservados
-				FROM "Usuarios"
+			FROM "Usuarios"
 				LEFT JOIN ( 
 					SELECT "UID", COUNT(*) AS atrasados
 						FROM "Pegar_Emprestado"
@@ -233,7 +245,6 @@ app.post('/registrar_genero', async (req,res) => {
 
 app.post('/fila', async (req,res) => {
 	const { UID } = req.body;
-	console.log(UID);
 	try{
 		const result = await sql`
 			SELECT DISTINCT nome, autor, "Livros"."LID" as "LID", posicao, disponiveis
@@ -261,7 +272,6 @@ app.post('/fila', async (req,res) => {
 		`;
 		res.json({success:true, data: result });
 	} catch(err){
-		console.log(err.message);
 		res.status(500).json({ success: false, mensagem: err.message });
 	}
 });
@@ -281,10 +291,8 @@ app.post('/emprestados', async (req,res) => {
 				AND "Devolucao" IS NULL
 			ORDER BY "Emprestimo" ASC
 		`;
-		console.log(result);
 		res.json({success:true, data: result });
 	} catch(err){
-		console.log(err.message);
 		res.status(500).json({ success: false, mensagem: err.message });
 	}
 });
@@ -310,10 +318,8 @@ app.post('/historico', async (req,res) => {
 			WHERE "UID" = ${UID}
 			ORDER BY "Emprestimo" ASC
 		`;
-		console.log(result);
 		res.json({success:true, data: result });
 	} catch(err){
-		console.log(err.message);
 		res.status(500).json({ success: false, mensagem: err.message });
 	}
 });
@@ -364,7 +370,7 @@ app.post('/emprestar', async (req,res) => {
 						AND p."LID" = "Fila_Emprestimo"."LID"
 				JOIN (
 					SELECT "LID", COUNT(*) AS disponiveis
-					FROM "Copia_Fisica"
+						FROM "Copia_Fisica"
 					WHERE "Emprestado" = false
 					GROUP BY "LID"
 				) AS d
@@ -383,13 +389,13 @@ app.post('/emprestar', async (req,res) => {
 				`;
 				await tx`
 					UPDATE "Copia_Fisica"
-					SET "Emprestado" = TRUE
+						SET "Emprestado" = TRUE
 					WHERE "FID" = ${FID};
 				`;
 				await tx`
 					DELETE FROM "Fila_Emprestimo"
 					WHERE "UID" = ${UID}
-					AND "LID" = ${LID};
+						AND "LID" = ${LID};
 				`;
 			});
 			res.json({success:true, mensagem: 'Livro emprestado' });
@@ -438,6 +444,58 @@ app.post('/devolver', async (req,res) => {
 	}
 });
 
+app.post('/lista', async (req,res) => {
+	const { UID } = req.body;
+	console.log(UID);
+	try{
+		const result = await sql`
+			SELECT *
+				FROM "Lista"
+				JOIN "Livros"
+					ON "Livros"."LID" = "Lista"."LID"
+			WHERE "Lista"."UID" = ${UID}
+		`;
+		res.json(result);
+	} catch(err){
+			res.status(500).json({ success: false, mensagem: err.message });
+	}
+});
+
+app.post('/add_lista', async (req,res) => {
+	const { LID, UID } = req.body;
+	try{
+		const result = await sql`
+			INSERT INTO "Lista" ("LID", "UID")
+			VALUES (${LID}, ${UID})
+		`;
+		res.json({success:true, mensagem: 'Livro adicionado com sucesso' });
+	} catch(err){
+		if(err.code === '23505'){
+			res.status(400).json({ success: false, mensagem: 'Livro já está na lista' });
+		} else{
+			res.status(500).json({ success: false, mensagem: err.message });
+		}
+	}
+});
+
+app.post('/remover_lista', async (req,res) => {
+	const { LID, UID } = req.body;
+	try{
+		const result = await sql`
+			DELETE FROM "Lista"
+				WHERE "UID" = ${UID}
+					AND "LID" = ${LID}
+		`;
+		res.json({success:true, mensagem: 'Livro removido com sucesso' });
+	} catch(err){
+		if(err.code === '23505'){
+			res.status(400).json({ success: false, mensagem: 'Livro já está na lista' });
+		} else{
+			res.status(500).json({ success: false, mensagem: err.message });
+		}
+	}
+});
+
 app.post('/avaliacoes', async (req,res) => {
 	const {LID} = req.body;
 	try{
@@ -465,7 +523,7 @@ app.post('/comentar', async (req,res) => {
 		res.json({success:true, mensagem: 'Comentario enviado' });
 	} catch(err){
 		if(err.code === '23505'){
-			res.status(400).json({ success: false, mensagem: 'Genero já cadastrado!' });
+			res.status(400).json({ success: false, mensagem: 'Comentario ja existe!' });
 		} else{
 			res.status(500).json({ success: false, mensagem: err.message });
 		}

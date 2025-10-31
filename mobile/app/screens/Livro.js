@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TextInput, Button, Alert, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
+import { View, Text, TextInput, Button, Alert, TouchableOpacity, StyleSheet, ScrollView, Pressable } from "react-native";
 import { ip } from '../model/';
 
 class Livro extends React.Component {
@@ -14,7 +14,37 @@ class Livro extends React.Component {
 	}
 
 	componentDidMount(){
+		const {navigation} = this.props;
 		this.carregarAvaliacoes();
+		this.unsubscribeFocus = navigation.addListener("focus", () => {
+			this.carregarAvaliacoes()
+		});
+	}
+
+	componentWillUnmount() {
+		if(this.unsubscribeFocus) {
+			this.unsubscribeFocus();
+		}
+	}
+
+	async adicionarLista(){
+		const {LID} = this.state.livro;
+		const {UID} = this.state.usuario;
+		console.log(this.state);
+		try{
+			const res = await fetch(`http://${ip}/add_lista`,{
+				method:"POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ UID, LID }),
+			});
+			const data = await res.json();
+			if(data.success)
+					Alert.alert("Sucesso","Livro Adicionado a lista");
+			else
+				Alert.alert("Erro", data.mensagem);
+		}catch(err){
+			Alert.alert("Erro ao conectar com o banco de dados",err);
+		}
 	}
 
 	async carregarAvaliacoes(){
@@ -85,6 +115,11 @@ class Livro extends React.Component {
 				<Text> {this.state.livro.autor} </Text>
 				<Text> {this.state.livro.genero} </Text>
 				<Text> {this.state.livro.descricao} </Text>
+				<Pressable
+					onPress={()=>this.adicionarLista()}
+				>
+					<Text> Adicionar a Lista </Text>
+				</Pressable>
 				<Button title="Reservar" onPress={() => this.reservar()} />
 				<ScrollView>
 					<View>

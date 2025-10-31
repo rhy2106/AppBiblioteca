@@ -36,6 +36,7 @@ class Principal extends React.Component{
 			});
 			const resultados = await res.json();
 			this.setState({ resultados });
+			console.log(resultados);
 		} catch(err){
 			Alert.alert("Erro ao connectar com o banco de dados");
 		}

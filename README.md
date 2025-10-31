@@ -35,10 +35,10 @@
   - [ ] Renovar Emprestimo
   - [X] Registrar Devolucao
 
-- [ ] Lista de livros
-  - [ ] Ver livro a Lista de Livros
-  - [ ] Adicionar livro a Lista de Livros
-  - [ ] Remover livro a Lista de Livros
+- [X] Lista de livros
+  - [X] Ver livro na Lista de Livros
+  - [X] Adicionar livro a Lista de Livros
+  - [X] Remover livro a Lista de Livros
 
 - [ ] Tinder Livro
   - [ ] Fila de espera

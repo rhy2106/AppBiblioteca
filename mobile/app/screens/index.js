@@ -9,5 +9,6 @@ import Estoque from './Estoque';
 import Perfil from './Perfil';
 import Historico from './Historico';
 import Usuarios from './Usuarios';
+import Lista from './Lista';
 
-export { Login, Cadastro, Principal, Registrar, Livro, Recepcao, Fila, Estoque, Perfil, Historico, Usuarios };
+export { Login, Cadastro, Principal, Registrar, Livro, Recepcao, Fila, Estoque, Perfil, Historico, Usuarios, Lista };
