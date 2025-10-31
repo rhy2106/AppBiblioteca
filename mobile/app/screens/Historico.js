@@ -9,6 +9,7 @@ class Historico extends React.Component{
 			...this.props.route.params,
 			historico: [],
 		}
+		console.log(this.state);
 	}
 	componentDidMount(){
 		const {navigation} = this.props;
@@ -32,7 +33,6 @@ class Historico extends React.Component{
 				body:JSON.stringify({ UID }),
 			});
 			const { data } = await res.json();
-			console.log(data);
 			this.setState({ historico: data });
 		}catch(err){
 			Alert.alert("Erro ao connectar com o banco de dados");

@@ -10,8 +10,6 @@ class Perfil extends React.Component {
 		};
 	}
 
-	
-
 	render() {
 		return (
 			<View>
@@ -25,10 +23,7 @@ class Perfil extends React.Component {
 					<Text> Erro e Sugestoes </Text>	
 				</Pressable>
 				<Pressable
-					onPress={()=>this.props.navigation.navigate('telasUsuario',{
-						screen: 'historico',
-							params: { usuario: this.state.usuario }
-					})}
+					onPress={()=>this.props.navigation.navigate('historico',{usuario: this.state.usuario})}
 				>
 					<Text> Historico </Text>
 				</Pressable>

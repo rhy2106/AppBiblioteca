@@ -2,40 +2,42 @@ import React from "react";
 import { View, Text, TextInput, Button, ScrollView, Alert, Pressable} from "react-native";
 import { ip } from "../model/";
 
-class Historico extends React.Component{
+class Usuarios extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = {
 			...this.props.route.params,
-			historico: [],
+			perfils: [],
+			pesquisa: "",
 		}
 	}
+
 	componentDidMount(){
 		const {navigation} = this.props;
-		this.hist();
+		this.buscar();
 		this.unsubscribeFocus = navigation.addListener("focus", () => {
-			this.hist()
+			this.buscar()
 		});
 	}
+
 	componentWillUnmount() {
 		if(this.unsubscribeFocus) {
 			this.unsubscribeFocus();
 		}
 	}
 
-	async hist(){
-		const {UID} = this.state.usuario;
+	async buscar() {
+		const { pesquisa } = this.state;
 		try{
-			const res = await fetch(`http://${ip}/historico`,{
+			const res = await fetch(`http://${ip}/buscar`,{
 				method: "POST",
 				headers: {"Content-Type":"application/json"},
-				body:JSON.stringify({ UID }),
+				body:JSON.stringify({pesquisa}),
 			});
-			const { data } = await res.json();
-			console.log(data);
-			this.setState({ historico: data });
-		}catch(err){
-			Alert.alert("Erro ao connectar com o banco de dados");
+			const perfils = await res.json();
+			this.setState({ perfils });
+		} catch(err){
+			Alert.alert("Erro","Não foi possivell conectar ao banco de dados!");
 		}
 	}
 
@@ -43,19 +45,19 @@ class Historico extends React.Component{
 		return(
 			<View>
 				<ScrollView style={{ marginTop: 10 }}>
-					<Text> Historico </Text>
-					{this.state.historico.map((livro,index)=>(
-						<View key={index}>
-							<Text> {livro.nome} </Text>
-							<Text> {livro.autor} </Text>
-							<Text> {"Emprestimo: " + new Date(livro.Emprestimo).toLocaleDateString('pt-BR')} </Text>
-							<Text> {"Prazo: " + new Date(livro.Prazo).toLocaleDateString('pt-BR')} </Text>
-							<Text> {"Devolucao: " +
-								( new Date(livro.Devolucao).toLocaleDateString('pt-BR') === '31/12/1999' ?
-									"Não foi devolvido ainda" :
-									new Date(livro.Devolucao).toLocaleDateString('pt-BR') )
-							} </Text>
-						</View>
+					<Text> Usuarios </Text>
+					{this.state.perfils.map((usuario,index)=>(
+						<Pressable 
+							onPress={()=>this.props.navigation.navigate("historico",{usuario})}
+							key={index}
+						>
+							<Text> {"Usuario: " + usuario.usuario} </Text>
+							<Text> {"UID: " + usuario.UID} </Text>
+							<Text> {"Email: " + usuario.email} </Text>
+							<Text> {"Genero: " + usuario.genero} </Text>
+							<Text> {"Atrasados: " + usuario.atrasados} </Text>
+							<Text> {"Reservados: " + usuario.reservados} </Text>
+						</Pressable>
 					))}
 				</ScrollView>
 			</View>	
@@ -63,5 +65,5 @@ class Historico extends React.Component{
 	}
 }
 
-export default Historico;
+export default Usuarios;
 

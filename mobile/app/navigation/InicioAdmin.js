@@ -1,6 +1,6 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Registrar, Recepcao, Estoque } from '../screens';
+import { Registrar, Recepcao, Estoque, Usuarios } from '../screens';
 import { TelasAdm } from './';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
@@ -18,14 +18,13 @@ class InicioAdmin extends React.Component{
 	render(){
 		return(
 			<Tab.Navigator>
-				<Tab.Screen name="telasAdm" component={TelasAdm}
+				<Tab.Screen name="estoque" component={Estoque}
 				   initialParams={{
 					   	usuario: this.state.usuario
 				   }}
 				   options={{
 						tabBarLabel: "estoque",
 						tabBarIcon:({color,size}) => (<FontAwesome name="home" color={color} size={size}/>),
-		   				headerShown: false,
 				  }}
 				/>
 				<Tab.Screen name="registrar" component={Registrar}
@@ -43,6 +42,15 @@ class InicioAdmin extends React.Component{
 				   }}
 				   options={{
 						tabBarLabel: "Recepcao",
+						tabBarIcon:({color,size}) => (<FontAwesome name="home" color={color} size={size}/>),
+				  }}
+				/>
+				<Tab.Screen name="usuarios" component={Usuarios}
+				   initialParams={{
+						usuario:this.state.usuario,
+				   }}
+				   options={{
+						tabBarLabel: "gerenciar usuarios",
 						tabBarIcon:({color,size}) => (<FontAwesome name="home" color={color} size={size}/>),
 				  }}
 				/>

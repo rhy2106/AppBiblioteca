@@ -8,5 +8,6 @@ import Fila from './Fila';
 import Estoque from './Estoque';
 import Perfil from './Perfil';
 import Historico from './Historico';
+import Usuarios from './Usuarios';
 
-export { Login, Cadastro, Principal, Registrar, Livro, Recepcao, Fila, Estoque, Perfil, Historico };
+export { Login, Cadastro, Principal, Registrar, Livro, Recepcao, Fila, Estoque, Perfil, Historico, Usuarios };

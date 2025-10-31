@@ -106,6 +106,60 @@ app.post('/pesquisa',async (req,res) => {
 	res.json(result);
 });
 
+app.post('/buscar',async (req,res) => {
+	const { pesquisa } = req.body;
+	let result;
+	if( pesquisa == "" ){
+		result = await sql`
+			SELECT *, COALESCE(a.atrasados, 0) AS atrasados, COALESCE(r.reservados, 0) AS reservados
+				FROM "Usuarios"
+				LEFT JOIN ( 
+					SELECT "UID", COUNT(*) AS atrasados
+						FROM "Pegar_Emprestado"
+					WHERE "Prazo" < now()
+					GROUP BY "UID"
+				) AS a
+					ON a."UID" = "Usuarios"."UID"
+				LEFT JOIN ( 
+					SELECT "UID", COUNT(*) AS reservados
+						FROM "Fila_Emprestimo"
+						GROUP BY "UID"
+				) AS r
+					ON r."UID" = "Usuarios"."UID"
+			LIMIT 50;
+		`;
+	}else{
+		result = await sql`
+			SELECT *, COALESCE(a.atrasados, 0) AS atrasados, COALESCE(r.reservados, 0) AS reservados
+				FROM "Usuarios"
+				LEFT JOIN ( 
+					SELECT "UID", COUNT(*) AS atrasados
+						FROM "Pegar_Emprestado"
+					WHERE "Prazo" < now()
+					GROUP BY "UID"
+				) AS a
+					ON a."UID" = "Usuarios"."UID"
+				LEFT JOIN ( 
+					SELECT "UID", COUNT(*) AS reservados
+						FROM "Fila_Emprestimo"
+						GROUP BY "UID"
+				) AS r
+					ON r."UID" = "Usuarios"."UID"
+			WHERE usuario % ${pesquisa}
+				OR email % ${pesquisa}
+				OR "Usuarios"."UID" % ${pesquisa}
+			ORDER BY GREATEST(
+				similarity(usuario, ${pesquisa}),
+				similarity(email, ${pesquisa}),
+				similarity("Usuarios"."UID", ${pesquisa})
+			) DESC
+			LIMIT 50;
+		`;
+	}
+	res.json(result);
+});
+
+
 app.post('/registrar_livro',async (req,res) => {
 	const {nome, autor, genero, descricao} = req.body;
 	try{

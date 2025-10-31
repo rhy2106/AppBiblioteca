@@ -1,6 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Autenticacao, InicioUsuario, InicioAdmin } from './navigation/';
+import { Livro, Historico } from './screens';
 
 const Stack = createStackNavigator();
 
@@ -20,6 +21,8 @@ class App extends React.Component{
 				<Stack.Screen name="inicioAdm" component={InicioAdmin}
 					options={{ headerShown:false }}
 				/>
+				<Stack.Screen name="Livro" component={Livro}/>
+				<Stack.Screen name="historico" component={Historico}/>
 			</Stack.Navigator>
 			
 		);
