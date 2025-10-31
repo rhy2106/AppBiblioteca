@@ -11,6 +11,21 @@ class Principal extends React.Component{
 			resultados: [],
 		}
 	}
+
+	componentDidMount(){
+		const {navigation} = this.props;
+		this.pesquisar();
+		this.unsubscribeFocus = navigation.addListener("focus", () => {
+			this.pesquisar()
+		});
+	}
+
+	componentWillUnmount() {
+		if(this.unsubscribeFocus) {
+			this.unsubscribeFocus();
+		}
+	}
+
 	async pesquisar(){
 		const { pesquisa } = this.state;
 		try {
