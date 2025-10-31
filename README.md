@@ -41,8 +41,10 @@
   - [X] Remover livro a Lista de Livros
 
 - [ ] Tinder Livro
-  - [ ] Fila de espera
   - [ ] Match
+    - [ ] Fila de espera
+  - [ ] Listar Matchs
+  - [ ] chat?
 
 - [ ] Doar Livro
 - [ ] Sugerir melhorias
