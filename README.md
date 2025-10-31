@@ -5,31 +5,47 @@
   - [Instalar dependências](#instalar-dependencias)
   - [Rodar o banco de dados](#rodar-o-banco-de-dados)
   - [Rodar o aplicativo mobile](#rodar-o-aplicativo-mobile)
+
 ## Funções feitas
-- [X] Buscar livro
-- [X] Reservar livro
-- [X] Registrar Emprestimo
-- [X] Registrar Devolucao
-- [X] Cadastrar Usuario
-- [X] Cadastrar Livro
-- [X] Cadastrar Autor
-- [X] Cadastrar Genero de Livro
+- [X] Autenticação do Usuario
+  - [X] Cadastrar Usuario
+  - [X] Login Admin/Usuario
+
 - [X] Controle de Estoque
-- [X] Login Admin/Usuario
-- [ ] Renovar Emprestimo
-- [X] Listar Livros atrasados
-- [X] Avaliar Livro
-- [X] Historico de Emprestimo
-- [ ] Criar / Editar Lista de Livros
-- [ ] Historico de Busca
-- [X] Listar Usuarios
-- [X] Ver historico de Usuarios
-- [ ] Barrar emprestimos de usuario
+  - [X] Cadastrar Livro
+    - [X] Cadastrar Autor
+    - [X] Cadastrar Genero de Livro
+  - [X] Buscar livro
+  - [X] Avaliar Livro
+  - [ ] Livros em Alta / Ranking
+  - [ ] E-books
+  - [ ] Historico de Busca
+
+- [X] Controle de Usuarios
+  - [X] Historico de Emprestimo
+    - [X] Perfil do usuario
+  - [X] Listar Usuarios
+    - [ ] Barrar emprestimos de usuario
+  - [X] Ver historico de Usuarios
+
+- [X] Registrar Emprestimo
+  - [X] Reservar livro
+    - [X] Fila de reservas
+  - [X] Listar Livros atrasados
+  - [ ] Renovar Emprestimo
+  - [X] Registrar Devolucao
+
+- [ ] Lista de livros
+  - [ ] Ver livro a Lista de Livros
+  - [ ] Adicionar livro a Lista de Livros
+  - [ ] Remover livro a Lista de Livros
+
 - [ ] Tinder Livro
+  - [ ] Fila de espera
+  - [ ] Match
+
 - [ ] Doar Livro
-- [ ] Livros em Alta / Ranking
 - [ ] Sugerir melhorias
-- [ ] E-books
 
 # Como rodar localmente
 ## Clonar repositorio
