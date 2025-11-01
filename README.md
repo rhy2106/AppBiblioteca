@@ -2,7 +2,7 @@
 O AppBiblioteca é um aplicativo de gerenciamento de biblioteca, que permite o controle de livros, usuários, emprestimos e avaliações. Além disso, possui uma função de Match, inspirado no tinder, para conhecer novas pessoas que tambem gostam de ler.
 
 # Sumario
-- [Objetivos/Motivações](#objetivos-motivações)
+- [Objetivos/Motivações](#objetivos-e-motivações)
 - [Funções feitas](#funções-feitas)
 
 - [Tecnologias Utilizadas](tecnologias-utilizadas)
@@ -14,7 +14,7 @@ O AppBiblioteca é um aplicativo de gerenciamento de biblioteca, que permite o c
   - [Rodar o banco de dados](#rodar-o-banco-de-dados)
   - [Rodar o aplicativo mobile](#rodar-o-aplicativo-mobile)
 
-# Objetivos / Motivações
+# Objetivos e Motivações
 O app foi desenvolvido como projeto na disciplina `CCG410 - Engenharia de Software`, e o objetivo era criar um MVP funcional com o tema 'Biblioteca'.
 
 # Funções feitas
