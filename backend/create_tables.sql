@@ -1,122 +1,118 @@
-CREATE TABLE public."Autor" (
-  autor CHARACTER VARYING NOT NULL,
-  CONSTRAINT Autor_pkey PRIMARY KEY (autor)
-) TABLESPACE pg_default;
+CREATE TABLE "Autor" (
+  "autor" character varying NOT NULL,
+  CONSTRAINT "Autor_pkey" PRIMARY KEY ("autor")
+);
 
-CREATE TABLE public."Genero" (
-  genero CHARACTER VARYING NOT NULL,
-  CONSTRAINT Genero_pkey PRIMARY KEY (genero)
-) TABLESPACE pg_default;
+CREATE TABLE "Genero" (
+  "genero" character varying NOT NULL,
+  CONSTRAINT "Genero_pkey" PRIMARY KEY ("genero")
+);
 
-CREATE TABLE public."Usuarios" (
-  "UID" UUID NOT NULL DEFAULT gen_random_uuid(),
-  usuario CHARACTER VARYING NOT NULL,
-  email CHARACTER VARYING NOT NULL,
-  senha CHARACTER VARYING NOT NULL,
-  adm BOOLEAN NOT NULL DEFAULT FALSE,
-  genero CHARACTER VARYING NOT NULL,
-  pontuacao BIGINT NOT NULL DEFAULT 0,
-  CONSTRAINT Usuarios_pkey PRIMARY KEY ("UID"),
-  CONSTRAINT Usuarios_email_key UNIQUE (email),
-  CONSTRAINT Usuarios_usuario_key UNIQUE (usuario)
-) TABLESPACE pg_default;
+CREATE TABLE "Usuarios" (
+  "UID" uuid NOT NULL DEFAULT gen_random_uuid(),
+  "usuario" character varying NOT NULL UNIQUE,
+  "email" character varying NOT NULL UNIQUE,
+  "senha" character varying NOT NULL,
+  "adm" boolean NOT NULL DEFAULT false,
+  "genero" character varying NOT NULL,
+  "pontuacao" bigint NOT NULL DEFAULT '0'::bigint,
+  CONSTRAINT "Usuarios_pkey" PRIMARY KEY ("UID")
+);
 
-CREATE TABLE public."Livros" (
-  "LID" UUID NOT NULL DEFAULT gen_random_uuid(),
-  nome CHARACTER VARYING NOT NULL,
-  descricao TEXT NOT NULL,
-  autor CHARACTER VARYING NOT NULL,
-  genero CHARACTER VARYING NOT NULL,
-  CONSTRAINT Livro_pkey PRIMARY KEY ("LID"),
-  CONSTRAINT Livro_autor_fkey FOREIGN KEY (autor)
-      REFERENCES public."Autor" (autor),
-  CONSTRAINT Livro_genero_fkey FOREIGN KEY (genero)
-      REFERENCES public."Genero" (genero)
-) TABLESPACE pg_default;
+CREATE TABLE "Livros" (
+  "LID" uuid NOT NULL DEFAULT gen_random_uuid(),
+  "nome" character varying NOT NULL,
+  "descricao" text NOT NULL,
+  "autor" character varying NOT NULL,
+  "genero" character varying NOT NULL,
+  CONSTRAINT "Livros_pkey" PRIMARY KEY ("LID"),
+  CONSTRAINT "Livro_autor_fkey" FOREIGN KEY ("autor") REFERENCES "Autor"("autor"),
+  CONSTRAINT "Livro_genero_fkey" FOREIGN KEY ("genero") REFERENCES "Genero"("genero")
+);
 
-CREATE TABLE public."Comentarios" (
-  "UID" UUID NOT NULL DEFAULT gen_random_uuid(),
-  "LID" UUID NOT NULL DEFAULT gen_random_uuid(),
-  descricao TEXT NOT NULL,
-  nota BIGINT NULL,
-  CONSTRAINT Comentarios_pkey PRIMARY KEY ("UID"),
-  CONSTRAINT Comentarios_LID_fkey FOREIGN KEY ("LID")
-      REFERENCES public."Livros" ("LID"),
-  CONSTRAINT Comentarios_UID_fkey FOREIGN KEY ("UID")
-      REFERENCES public."Usuarios" ("UID")
-) TABLESPACE pg_default;
+CREATE TABLE "Copia_Fisica" (
+  "FID" uuid NOT NULL DEFAULT gen_random_uuid(),
+  "Emprestado" boolean DEFAULT false,
+  "LID" uuid DEFAULT gen_random_uuid(),
+  CONSTRAINT "Copia_Fisica_pkey" PRIMARY KEY ("FID"),
+  CONSTRAINT "Copia_Fisica_LID_fkey" FOREIGN KEY ("LID") REFERENCES "Livros"("LID")
+);
 
-CREATE TABLE public."Lista" (
-  "LID" UUID NOT NULL DEFAULT gen_random_uuid(),
-  "UID" UUID NULL DEFAULT gen_random_uuid(),
-  CONSTRAINT Lista_LID_fkey FOREIGN KEY ("LID")
-      REFERENCES public."Livros" ("LID"),
-  CONSTRAINT Lista_UID_fkey FOREIGN KEY ("UID")
-      REFERENCES public."Usuarios" ("UID")
-) TABLESPACE pg_default;
+CREATE TABLE "Pegar_Emprestado" (
+  "EID" uuid NOT NULL DEFAULT gen_random_uuid(),
+  "Emprestimo" date NOT NULL DEFAULT now(),
+  "Devolucao" date,
+  "Prazo" date NOT NULL DEFAULT (CURRENT_DATE + 7),
+  "UID" uuid NOT NULL,
+  "FID" uuid NOT NULL,
+  CONSTRAINT "Pegar_Emprestado_pkey" PRIMARY KEY ("EID"),
+  CONSTRAINT "Pegar_Emprestado_FID_fkey" FOREIGN KEY ("FID") REFERENCES "Copia_Fisica"("FID"),
+  CONSTRAINT "Pegar_Emprestado_UID_fkey" FOREIGN KEY ("UID") REFERENCES "Usuarios"("UID")
+);
 
-CREATE TABLE public."Fila_Emprestimo" (
-  "UID" UUID NOT NULL DEFAULT gen_random_uuid(),
-  "Data" DATE NULL,
-  "LID" UUID NULL,
-  CONSTRAINT Fila_Emprestimo_pkey PRIMARY KEY ("UID"),
-  CONSTRAINT Fila_Emprestimo_LID_fkey FOREIGN KEY ("LID")
-      REFERENCES public."Livros" ("LID"),
-  CONSTRAINT Fila_Emprestimo_UID_fkey FOREIGN KEY ("UID")
-      REFERENCES public."Usuarios" ("UID")
-) TABLESPACE pg_default;
+CREATE TABLE "Historico" (
+  "EID" uuid NOT NULL,
+  CONSTRAINT "Historico_pkey" PRIMARY KEY ("EID"),
+  CONSTRAINT "Historico_EID_fkey" FOREIGN KEY ("EID") REFERENCES "Pegar_Emprestado"("EID")
+);
 
-CREATE TABLE public."Fila_Tinder" (
-  "UID" UUID NOT NULL DEFAULT gen_random_uuid(),
-  CONSTRAINT Fila_Tinder_pkey PRIMARY KEY ("UID"),
-  CONSTRAINT Fila_Tinder_UID_fkey FOREIGN KEY ("UID")
-      REFERENCES public."Usuarios" ("UID")
-) TABLESPACE pg_default;
+CREATE TABLE "Comentarios" (
+  "UID" uuid NOT NULL DEFAULT gen_random_uuid(),
+  "LID" uuid NOT NULL DEFAULT gen_random_uuid(),
+  "descricao" text NOT NULL,
+  "nota" bigint,
+  CONSTRAINT "Comentarios_pkey" PRIMARY KEY ("UID"),
+  CONSTRAINT "Comentarios_UID_fkey" FOREIGN KEY ("UID") REFERENCES "Usuarios"("UID"),
+  CONSTRAINT "Comentarios_LID_fkey" FOREIGN KEY ("LID") REFERENCES "Livros"("LID")
+);
 
-CREATE TABLE public."Erro_Sugestao" (
-  "UID" UUID NOT NULL DEFAULT gen_random_uuid(),
-  descricao TEXT NOT NULL,
-  CONSTRAINT Erro_Sugestao_pkey PRIMARY KEY ("UID"),
-  CONSTRAINT Erro_Sugestao_UID_fkey FOREIGN KEY ("UID")
-      REFERENCES public."Usuarios" ("UID")
-) TABLESPACE pg_default;
+CREATE TABLE "Lista" (
+  "LID" uuid NOT NULL DEFAULT gen_random_uuid(),
+  "UID" uuid NOT NULL DEFAULT gen_random_uuid(),
+  CONSTRAINT "Lista_pkey" PRIMARY KEY ("LID", "UID"),
+  CONSTRAINT "Lista_UID_fkey" FOREIGN KEY ("UID") REFERENCES "Usuarios"("UID"),
+  CONSTRAINT "Lista_LID_fkey" FOREIGN KEY ("LID") REFERENCES "Livros"("LID")
+);
 
-CREATE TABLE public."Copia_Fisica" (
-  "FID" UUID NOT NULL DEFAULT gen_random_uuid(),
-  "Emprestado" BOOLEAN NULL DEFAULT FALSE,
-  "LID" UUID NULL DEFAULT gen_random_uuid(),
-  CONSTRAINT Copia_Fisica_pkey PRIMARY KEY ("FID"),
-  CONSTRAINT Copia_Fisica_LID_fkey FOREIGN KEY ("LID")
-      REFERENCES public."Livros" ("LID")
-) TABLESPACE pg_default;
+CREATE TABLE "Ebook" (
+  "conteudo" text NOT NULL,
+  "LID" uuid NOT NULL DEFAULT gen_random_uuid(),
+  CONSTRAINT "Ebook_pkey" PRIMARY KEY ("conteudo"),
+  CONSTRAINT "Ebook_LID_fkey" FOREIGN KEY ("LID") REFERENCES "Livros"("LID")
+);
 
-CREATE TABLE public."Ebook" (
-  conteudo TEXT NOT NULL,
-  "LID" UUID NOT NULL DEFAULT gen_random_uuid(),
-  CONSTRAINT Ebook_pkey PRIMARY KEY (conteudo),
-  CONSTRAINT Ebook_LID_fkey FOREIGN KEY ("LID")
-      REFERENCES public."Livros" ("LID")
-) TABLESPACE pg_default;
+CREATE TABLE "Fila_Emprestimo" (
+  "UID" uuid NOT NULL DEFAULT gen_random_uuid(),
+  "Data" date DEFAULT now(),
+  "LID" uuid NOT NULL,
+  CONSTRAINT "Fila_Emprestimo_pkey" PRIMARY KEY ("UID", "LID"),
+  CONSTRAINT "Fila_Emprestimo_UID_fkey" FOREIGN KEY ("UID") REFERENCES "Usuarios"("UID"),
+  CONSTRAINT "Fila_Emprestimo_LID_fkey" FOREIGN KEY ("LID") REFERENCES "Livros"("LID")
+);
 
-CREATE TABLE public."Pegar_Emprestado" (
-  "EID" UUID NOT NULL DEFAULT gen_random_uuid(),
-  "Emprestimo" DATE NOT NULL,
-  "Devolucao" DATE NOT NULL,
-  "Prazo" DATE NOT NULL,
-  "UID" UUID NOT NULL,
-  "FID" UUID NOT NULL,
-  CONSTRAINT Pegar_Emprestado_pkey PRIMARY KEY ("EID"),
-  CONSTRAINT Pegar_Emprestado_FID_fkey FOREIGN KEY ("FID")
-      REFERENCES public."Copia_Fisica" ("FID"),
-  CONSTRAINT Pegar_Emprestado_UID_fkey FOREIGN KEY ("UID")
-      REFERENCES public."Usuarios" ("UID")
-) TABLESPACE pg_default;
+CREATE TABLE "Fila_Tinder" (
+  "UID" uuid NOT NULL DEFAULT gen_random_uuid(),
+  "genero" character varying NOT NULL,
+  "preferencia" character varying,
+  CONSTRAINT "Fila_Tinder_pkey" PRIMARY KEY ("UID"),
+  CONSTRAINT "Fila_Tinder_UID_fkey" FOREIGN KEY ("UID") REFERENCES "Usuarios"("UID")
+);
 
-CREATE TABLE public."Historico" (
-  "EID" UUID NOT NULL,
-  CONSTRAINT Historico_pkey PRIMARY KEY ("EID"),
-  CONSTRAINT Historico_EID_fkey FOREIGN KEY ("EID")
-      REFERENCES public."Pegar_Emprestado" ("EID")
-) TABLESPACE pg_default;
+CREATE TABLE "Match" (
+  "pessoa1" uuid NOT NULL DEFAULT gen_random_uuid(),
+  "pessoa2" uuid NOT NULL DEFAULT gen_random_uuid(),
+  "dia" timestamp with time zone,
+  "sala" bigint,
+  CONSTRAINT "Match_pkey" PRIMARY KEY ("pessoa1", "pessoa2"),
+  CONSTRAINT "Match_pessoa1_fkey" FOREIGN KEY ("pessoa1") REFERENCES "Usuarios"("UID"),
+  CONSTRAINT "Match_pessoa2_fkey1" FOREIGN KEY ("pessoa2") REFERENCES "Usuarios"("UID")
+);
 
+CREATE TABLE "Erro_Sugestao" (
+  "UID" uuid NOT NULL DEFAULT gen_random_uuid(),
+  "descricao" text NOT NULL,
+  CONSTRAINT "Erro_Sugestao_pkey" PRIMARY KEY ("UID"),
+  CONSTRAINT "Erro_Sugestao_UID_fkey" FOREIGN KEY ("UID") REFERENCES "Usuarios"("UID")
+);
 
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
