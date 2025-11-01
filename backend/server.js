@@ -454,10 +454,21 @@ app.post('/lista', async (req,res) => {
 	console.log(UID);
 	try{
 		const result = await sql`
-			SELECT *
-				FROM "Lista"
+			SELECT 
+				"Livros"."LID" AS "LID",
+				"Livros".nome AS nome,
+				"Livros".autor AS autor,
+				"Livros".genero AS genero,
+				COALESCE(a.nota, 0) AS nota
+			FROM "Lista"
 				JOIN "Livros"
 					ON "Livros"."LID" = "Lista"."LID"
+				LEFT JOIN (
+					SELECT "LID", ROUND(SUM(nota)/COUNT("LID"),2) AS nota
+						FROM "Comentarios"
+					GROUP BY "LID"
+				) AS a
+					ON "Livros"."LID" = a."LID"
 			WHERE "Lista"."UID" = ${UID}
 		`;
 		res.json(result);

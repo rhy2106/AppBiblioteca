@@ -6,6 +6,9 @@ const cor_botao = '#565656';
 const cor_selecionado = '#5555aa';
 const cor_nao_selecionado = cor_botao;
 
+const cor_header = '#202020';
+const cor_tab = '#99f9e9';
+
 const estilos = StyleSheet.create({
 	container:{
 		backgroundColor: cor_fundo,
@@ -107,4 +110,4 @@ const estilos = StyleSheet.create({
 	},
 });
 
-export { estilos };
+export { estilos, cor_header, cor_letra, cor_tab };

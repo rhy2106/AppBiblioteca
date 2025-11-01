@@ -2,6 +2,7 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { TelasUsuario } from './';
 import { Fila, Perfil, Principal, Lista, Tinder } from '../screens/';
+import { cor_header, cor_tab, cor_letra } from '../styles/Estilos';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 const Tab = createBottomTabNavigator();
@@ -15,7 +16,16 @@ class Inicio extends React.Component{
 	}
 	render(){
 		return(
-			<Tab.Navigator>
+			<Tab.Navigator
+				screenOptions={{
+					headerStyle: { backgroundColor: cor_header },
+					headerTintColor: cor_letra,
+
+					tabBarStyle: { backgroundColor: cor_header },
+					tabBarActiveTintColor: cor_tab,
+					tabBarInactiveTintColor: cor_letra,
+				}}
+			>
 				<Tab.Screen name="home" component={Principal}
 				   initialParams={{
 						usuario:this.state.usuario,
@@ -32,7 +42,7 @@ class Inicio extends React.Component{
 				   }}
 				   options={{
 						tabBarLabel: "Lista",
-						tabBarIcon:({color,size}) => (<FontAwesome name="home" color={color} size={size}/>),
+						tabBarIcon:({color,size}) => (<FontAwesome name="bookmark" color={color} size={size}/>),
 					  }}
 				/>
 
@@ -42,7 +52,7 @@ class Inicio extends React.Component{
 				   }}
 				   options={{
 						tabBarLabel: "Perfil",
-						tabBarIcon:({color,size}) => (<FontAwesome name="home" color={color} size={size}/>),
+						tabBarIcon:({color,size}) => (<FontAwesome name="user-circle" color={color} size={size}/>),
 					  }}
 				/>
 
@@ -52,7 +62,7 @@ class Inicio extends React.Component{
 				   }}
 				   options={{
 						tabBarLabel: "Tinder",
-						tabBarIcon:({color,size}) => (<FontAwesome name="home" color={color} size={size}/>),
+						tabBarIcon:({color,size}) => (<FontAwesome name="user-plus" color={color} size={size}/>),
 					  }}
 				/>
 			
@@ -62,7 +72,7 @@ class Inicio extends React.Component{
 				   }}
 				   options={{
 						tabBarLabel: "Fila",
-						tabBarIcon:({color,size}) => (<FontAwesome name="home" color={color} size={size}/>),
+						tabBarIcon:({color,size}) => (<FontAwesome name="file-text" color={color} size={size}/>),
 					  }}
 				/>
 				

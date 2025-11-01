@@ -2,6 +2,7 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Autenticacao, InicioUsuario, InicioAdmin } from './navigation/';
 import { Livro, Historico } from './screens';
+import { cor_header, cor_letra } from './styles/Estilos';
 
 const Stack = createStackNavigator();
 
@@ -11,7 +12,12 @@ class App extends React.Component{
 	}
 	render(){
 		return(
-			<Stack.Navigator>
+			<Stack.Navigator
+				screenOptions={{
+					headerStyle: { backgroundColor: cor_header },
+					headerTintColor: cor_letra,
+				}}
+			>
 				<Stack.Screen name="autenticacao" component={Autenticacao} 
 					options={{ headerShown:false }}
 				/>

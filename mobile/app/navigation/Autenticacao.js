@@ -1,6 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Login, Cadastro } from '../screens';
+import { cor_header, cor_letra, cor_tab } from '../styles/Estilos';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
@@ -13,7 +14,16 @@ class Autenticacao extends React.Component{
 	}
 	render(){
 		return(
-			<Tab.Navigator>
+			<Tab.Navigator
+				screenOptions={{
+					headerStyle: { backgroundColor: cor_header },
+					headerTintColor: cor_letra,
+
+					tabBarStyle: { backgroundColor: cor_header },
+					tabBarActiveTintColor: cor_tab,
+					tabBarInactiveTintColor: cor_letra,
+				}}
+			>
                  <Tab.Screen name="login" component={Login}
 					options={{
  						tabBarLabel: "Login",
