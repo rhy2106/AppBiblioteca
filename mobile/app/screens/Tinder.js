@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, TextInput, Button, ScrollView, Alert, Pressable} from "react-native";
 import { ip } from "../model/";
+import { estilos } from "../styles/Estilos";
 
 class Tinder extends React.Component{
 	constructor(props){
@@ -68,35 +69,42 @@ class Tinder extends React.Component{
 	render(){
 		const options = ["Homem", "Mulher"];
 		return(
-			<View>
-				{options.map((o)=>(
-					<Pressable
-						key={o}
-						onPress={()=>this.setState({preferencia:o})}
-					>
-						<Text>
-							{o}
-						</Text>
-					</Pressable>
-				))}
+			<View style={estilos.container}>
+				<View style={estilos.inline}>
+					{options.map((o)=>(
+						<Pressable
+							style={[estilos.botao, (this.state.preferencia === o ? estilos.selecionado : estilos.nao_selecionado)]}
+							key={o}
+							onPress={()=>this.setState({preferencia:o})}
+						>
+							<Text style={estilos.texto}>
+								{o}
+							</Text>
+						</Pressable>
+					))}
+					</View>
 				<Pressable
+					style={estilos.botao}
 					onPress={()=>this.match()}
 				>
-					<Text> { "Match ( 5 pontos )" } </Text>
+					<Text style={estilos.texto}> { "Match ( 5 pontos )" } </Text>
 				</Pressable>
 
-				<ScrollView style={{ marginTop: 10 }}>
+				<ScrollView style={estilos.scroll}>
 					{ this.state.procurando &&
-						<View>
-							<Text> {"Procurando Match"} </Text>
+						<View style={estilos.scroll_item}>
+							<Text style={estilos.texto}> {"Procurando Match"} </Text>
 						</View>
 					}
 					{(this.state.matchs || []).map((match,index)=>(
-						<View key={index}>
-							<Text> {match.usuario} </Text>
-							<Text> {match.email} </Text>
-							<Text> {"Sala " + match.sala} </Text>
-							<Text> {match.dia} </Text>
+						<View 
+							style={estilos.scroll_item}
+							key={index}
+						>
+							<Text style={estilos.texto} > {match.usuario} </Text>
+							<Text style={estilos.texto} > {match.email} </Text>
+							<Text style={estilos.texto} > {"Sala " + match.sala} </Text>
+							<Text style={estilos.texto} > {match.dia} </Text>
 						</View>
 					))}
 				</ScrollView>

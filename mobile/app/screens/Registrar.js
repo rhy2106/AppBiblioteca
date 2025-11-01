@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, TextInput, Button, Alert, TouchableOpacity, StyleSheet, ScrollView, Pressable} from "react-native";
 import { ip } from '../model/';
+import { estilos } from "../styles/Estilos";
 
 class Registrar extends React.Component {
 	constructor(props) {
@@ -110,70 +111,138 @@ class Registrar extends React.Component {
 			Alert.alert("Erro", "Não foi possível conectar ao servidor");
 		}
 	}
+
 	render() {
 		const op = ["Livros","Autor","Genero","Livro Fisico"]
 		return (
-			<View>
-				{op.map((o) => {
-					const selecionado = this.state.opcao;
-					return (
-						<TouchableOpacity
-							key={o}
-							onPress={()=>this.setState({opcao:o})}
-						>
-							<Text> {o} </Text>
-						</TouchableOpacity>	
-					);
-				})}
-				{this.state.opcao == "Genero" && 
-				<View>
-					<Text>Registrar Genero</Text>
-					<Text>Genero:</Text>
-					<TextInput onChangeText={(genero) => this.setState({ genero })} />
-					<Button title="Registrar" onPress={() => this.gravar_genero()} />
-				</View> ||
-				this.state.opcao == "Autor" && 
-				<View>
-					<Text>Registrar Autor</Text>
-					<Text>Autor:</Text>
-					<TextInput onChangeText={(autor) => this.setState({ autor })} />
-					<Button title="Registrar" onPress={() => this.gravar_autor()} />
-				</View> ||
-				this.state.opcao == "Livros" &&
-				<View>
-					<Text>Registrar Livro</Text>
-					<Text>Nome:</Text>
-					<TextInput onChangeText={(nome) => this.setState({ nome })} />
-					<Text>Autor:</Text>
-					<TextInput onChangeText={(autor) => this.setState({ autor })} />
-					<Text>Genero:</Text>
-					<TextInput onChangeText={(genero) => this.setState({ genero })} />
-					<Text>Descricao:</Text>
-					<TextInput onChangeText={(descricao) => this.setState({ descricao })} />
-					<Button title="Registrar" onPress={() => this.gravar_livro()} />
-				</View> || 
-				this.state.opcao == "Livro Fisico" &&
-				<View>
-					<Text> Registrar Livro Fisico </Text>
-					<TextInput onChangeText={(pesquisa) => this.setState({ pesquisa })} />
-					<Button title="Pesquisar" onPress={() => this.pesquisar()}/>
-					{ this.state.FID &&
-						<View>
-							<Text> {"FID do novo livro registrado:"} </Text>
-							<Text> {`${this.state.FID}`} </Text>
-						</View>
-					}
-					<ScrollView>
-						{this.state.resultados.map((livro,index) => (
-							<Pressable key={index} onPress={()=> this.gravar_livro_fisico(livro)}>
-								<Text> Nome: {livro.nome} </Text>
-								<Text> Autor: {livro.autor} </Text>
-								<Text> Genero: {livro.genero} </Text>
-							</Pressable>
-						))}
-						
-					</ScrollView>
+			<View style={estilos.container}>
+				<View style={estilos.inline}>
+					{op.map((o) => {
+						const selecionado = this.state.opcao;
+						return (
+							<TouchableOpacity
+								style={[estilos.botao, this.state.opcao === o ? estilos.selecionado : estilos.nao_selecionado]}
+								key={o}
+								onPress={()=>this.setState({opcao:o})}
+							>
+								<Text style={estilos.texto}> {o} </Text>
+							</TouchableOpacity>	
+						);
+					})}
 				</View>
+
+				{this.state.opcao == "Genero" && 
+					<View>
+						<Text style={estilos.titulo}>Registrar Genero</Text>
+						<View style={estilos.inline}>
+							<Text style={estilos.texto}>Genero:</Text>
+							<TextInput
+								style={estilos.input}
+								value={this.state.genero}
+								onChangeText={(genero) => this.setState({ genero })}
+							/>
+						</View>
+						<Pressable
+							onPress={() => this.gravar_genero()}
+							style={estilos.botao}
+						>
+							<Text style={estilos.texto}> {"Registrar"} </Text>
+						</Pressable>	
+					</View>
+
+				|| this.state.opcao == "Autor" && 
+					<View>
+						<Text style={estilos.titulo}>Registrar Autor</Text>
+						<View style={estilos.inline}>
+							<Text style={estilos.texto}>Autor:</Text>
+							<TextInput
+								style={estilos.input}
+								value={this.state.autor}
+								onChangeText={(autor) => this.setState({ autor })}
+							/>
+							
+						</View>
+						<Pressable
+							onPress={() => this.gravar_autor()}
+							style={estilos.botao}
+						>
+							<Text style={estilos.texto}> {"Registrar"} </Text>
+						</Pressable>	
+					</View>
+
+				|| this.state.opcao == "Livros" &&
+					<View>
+						<Text style={estilos.titulo}>Registrar Livro</Text>
+						<View style={estilos.inline}>
+							<Text style={estilos.texto}>Nome:</Text>
+							<TextInput
+								style={estilos.input}
+								onChangeText={(nome) => this.setState({ nome })}
+							/>
+						</View>
+						<View style={estilos.inline}>
+							<Text style={estilos.texto}>Autor:</Text>
+							<TextInput
+								style={estilos.input}
+								onChangeText={(autor) => this.setState({ autor })} />
+						</View>
+						<View style={estilos.inline}>
+							<Text style={estilos.texto}>Genero:</Text>
+							<TextInput
+								style={estilos.input}
+								onChangeText={(genero) => this.setState({ genero })} />
+						</View>
+						<View style={estilos.inline}>
+							<Text style={estilos.texto}>Descricao:</Text>
+							<TextInput
+								style={estilos.input}
+								onChangeText={(descricao) => this.setState({ descricao })} />
+						</View>
+						<Pressable
+							style={estilos.botao}
+						onPress={() => this.gravar_livro()}
+						>
+							<Text style={estilos.texto}> {"Registrar"} </Text>
+
+						</Pressable>
+					</View>
+
+				|| this.state.opcao == "Livro Fisico" &&
+					<View style={estilos.container3}>
+						<Text style={estilos.titulo}> Registrar Livro Fisico </Text>
+						<View style={estilos.inline}>
+							<TextInput
+								style={estilos.input}
+								onChangeText={(pesquisa) => this.setState({ pesquisa })}
+							/>
+							<Pressable
+								style={estilos.botao}
+								onPress={() => this.pesquisar()}
+							>
+								<Text style={estilos.texto}> {"Pesquisar"} </Text>
+							</Pressable>
+						</View>
+						{ this.state.FID &&
+							<View>
+								<Text style={estilos.texto}> {"FID do novo livro registrado:"} </Text>
+								<Text style={estilos.texto}> {`${this.state.FID}`} </Text>
+							</View>
+						}
+						<ScrollView style={estilos.scroll}>
+							{this.state.resultados.map((livro,index) => (
+								<Pressable
+									style={estilos.scroll_item}
+									key={index}
+									onPress={()=> this.gravar_livro_fisico(livro)}
+								>
+									<Text style={estilos.texto}> Nome: {livro.nome} </Text>
+									<Text style={estilos.texto}> Autor: {livro.autor} </Text>
+									<Text style={estilos.texto}> Genero: {livro.genero} </Text>
+								</Pressable>
+							))}
+							
+						</ScrollView>
+					</View>
 				}
 			</View>
 		);

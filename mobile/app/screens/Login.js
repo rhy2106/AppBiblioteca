@@ -1,6 +1,7 @@
 import React from "react";
-import { View, Text, TextInput, Button, Alert } from "react-native";
+import { View, Text, TextInput, Pressable, Alert } from "react-native";
 import { ip, hash } from "../model/";
+import { estilos } from "../styles/Estilos";
 
 class Login extends React.Component {
 	constructor(props) {
@@ -48,13 +49,28 @@ class Login extends React.Component {
 
 	render() {
 		return (
-			<View>
-				<Text>Login</Text>
-				<Text>Email:</Text>
-				<TextInput onChangeText={(email) => this.setState({ email })} />
-				<Text>Senha:</Text>
-				<TextInput onChangeText={(senha) => this.setState({ senha })} />
-				<Button title="Login" onPress={() => this.logar()} />
+			<View style={estilos.container}>
+				<Text style={estilos.titulo} > {"Login"}</Text>
+				<View style={estilos.inline} >
+					<Text style={estilos.texto} > {"Email:"} </Text>
+					<TextInput
+						style={estilos.input}
+						onChangeText={(email) => this.setState({ email })}
+					/>
+				</View>
+				<View style={estilos.inline} >
+					<Text style={estilos.texto} > {"Senha:"} </Text>
+					<TextInput
+						style={estilos.input}
+						onChangeText={(senha) => this.setState({ senha })}
+					/>
+				</View>
+				<Pressable
+					style={estilos.botao}
+					onPress={()=>this.logar()}
+				>
+					<Text style={estilos.texto} > {"Login"} </Text>
+				</Pressable>
 			</View>
 		);
 	}

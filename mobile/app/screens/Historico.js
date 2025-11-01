@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, TextInput, Button, ScrollView, Alert, Pressable} from "react-native";
 import { ip } from "../model/";
+import { estilos } from "../styles/Estilos";
 
 class Historico extends React.Component{
 	constructor(props){
@@ -41,16 +42,16 @@ class Historico extends React.Component{
 
 	render(){
 		return(
-			<View>
-				<ScrollView style={{ marginTop: 10 }}>
-					<Text> Historico </Text>
+			<View style={estilos.container}>
+				<ScrollView style={estilos.scroll}>
+					<Text style={estilos.titulo}> Historico </Text>
 					{this.state.historico.map((livro,index)=>(
-						<View key={index}>
-							<Text> {livro.nome} </Text>
-							<Text> {livro.autor} </Text>
-							<Text> {"Emprestimo: " + new Date(livro.Emprestimo).toLocaleDateString('pt-BR')} </Text>
-							<Text> {"Prazo: " + new Date(livro.Prazo).toLocaleDateString('pt-BR')} </Text>
-							<Text> {"Devolucao: " +
+						<View style={estilos.scroll_item} key={index}>
+							<Text style={estilos.texto} > {livro.nome} </Text>
+							<Text style={estilos.texto} > {livro.autor} </Text>
+							<Text style={estilos.texto} > {"Emprestimo: " + new Date(livro.Emprestimo).toLocaleDateString('pt-BR')} </Text>
+							<Text style={estilos.texto} > {"Prazo: " + new Date(livro.Prazo).toLocaleDateString('pt-BR')} </Text>
+							<Text style={estilos.texto} > {"Devolucao: " +
 								( new Date(livro.Devolucao).toLocaleDateString('pt-BR') === '31/12/1999' ?
 									"Não foi devolvido ainda" :
 									new Date(livro.Devolucao).toLocaleDateString('pt-BR') )

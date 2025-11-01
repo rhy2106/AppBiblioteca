@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, TextInput, Button, ScrollView, Alert, Pressable} from "react-native";
 import { ip } from "../model/";
+import { estilos } from '../styles/Estilos';
 
 class Usuarios extends React.Component{
 	constructor(props){
@@ -44,29 +45,34 @@ class Usuarios extends React.Component{
 
 	render(){
 		return(
-			<View>
-				<ScrollView style={{ marginTop: 10 }}>
+			<View style={estilos.container}>
+				<View style={estilos.inline}>
 					<TextInput
+						style={estilos.input}
 						value={this.state.pesquisa}
 						onChangeText={(texto)=>this.setState({pesquisa:texto})}
 					/>
 					<Pressable 
+						style={estilos.botao}
 						onPress={()=>this.buscar()}
 					>
-						<Text> Buscar </Text>
+						<Text style={estilos.texto}> {"Buscar"} </Text>
 					</Pressable>
-					<Text> Usuarios </Text>
+				</View>
+				<ScrollView style={estilos.scroll}>
+					<Text style={estilos.titulo}> Usuarios </Text>
 					{this.state.perfils.map((usuario,index)=>(
 						<Pressable 
+							style={estilos.scroll_item}
 							onPress={()=>this.props.navigation.navigate("historico",{usuario})}
 							key={index}
 						>
-							<Text> {"Usuario: " + usuario.usuario} </Text>
-							<Text> {"UID: " + usuario.UID} </Text>
-							<Text> {"Email: " + usuario.email} </Text>
-							<Text> {"Genero: " + usuario.genero} </Text>
-							<Text> {"Atrasados: " + usuario.atrasados} </Text>
-							<Text> {"Reservados: " + usuario.reservados} </Text>
+							<Text style={estilos.texto}> {"Usuario: " + usuario.usuario} </Text>
+							<Text style={estilos.texto}> {"UID: " + usuario.UID} </Text>
+							<Text style={estilos.texto}> {"Email: " + usuario.email} </Text>
+							<Text style={estilos.texto}> {"Genero: " + usuario.genero} </Text>
+							<Text style={estilos.texto}> {"Atrasados: " + usuario.atrasados} </Text>
+							<Text style={estilos.texto}> {"Reservados: " + usuario.reservados} </Text>
 						</Pressable>
 					))}
 				</ScrollView>

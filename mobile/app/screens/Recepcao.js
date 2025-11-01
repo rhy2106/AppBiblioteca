@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, TextInput, Button, Alert, TouchableOpacity, StyleSheet, ScrollView, Pressable} from "react-native";
 import { ip } from '../model/';
+import { estilos } from "../styles/Estilos";
 
 class Recepcao extends React.Component {
 	constructor(props) {
@@ -55,45 +56,49 @@ class Recepcao extends React.Component {
 	render() {
 		const op = ["Emprestar","Devolver"]
 		return (
-			<View>
-				{op.map((o) => {
-					const selecionado = this.state.opcao;
-					return (
-						<TouchableOpacity
-							key={o}
-							onPress={()=>this.setState({opcao:o})}
-						>
-							<Text> {o} </Text>
-						</TouchableOpacity>	
-					);
-				})}
-				<Text>UID</Text>
-				<TextInput
-					value={this.state.UID}
-					onChangeText={(UID) => this.setState({ UID })}
-				/>
-				<Text>FID</Text>
-				<TextInput
-					value={this.state.FID}
-					onChangeText={(FID) => this.setState({ FID })}
-				/>
-				<Button
-					title={this.state.opcao == "Emprestar" ? "Emprestar" : "Devolver"}
+			<View style={estilos.container}>
+				<View style={estilos.inline}>
+					{op.map((o) => {
+						const selecionado = this.state.opcao;
+						return (
+							<TouchableOpacity
+								style={[estilos.botao,this.state.opcao === o ? estilos.selecionado : estilos.nao_selecionado]}
+								key={o}
+								onPress={()=>this.setState({opcao:o})}
+							>
+								<Text style={estilos.texto}> {o} </Text>
+							</TouchableOpacity>	
+						);
+					})}
+				</View>
+
+				<View style={estilos.inline}>
+					<Text style={estilos.texto}>UID</Text>
+					<TextInput
+						style={estilos.input}
+						value={this.state.UID}
+						onChangeText={(UID) => this.setState({ UID })}
+					/>
+				</View>
+
+				<View style={estilos.inline}>
+					<Text style={estilos.texto}>FID</Text>
+					<TextInput
+						style={estilos.input}
+						value={this.state.FID}
+						onChangeText={(FID) => this.setState({ FID })}
+					/>
+				</View>
+
+				<Pressable
+					style={estilos.botao}
 					onPress={() =>{this.state.opcao == "Emprestar" ? this.emprestar() : this.devolver()}}
-				/>
-				
-				<ScrollView>
-					{this.state.resultados.map((livro,id)=>(
-						<View key={id}>
-							<Text> livro.nome </Text>
-							<Text> livro.autor </Text>
-							<Text> 
-								{ livro.disponiveis >= livro.posicao ? "Disponivel" : "Indisponivel"}
-							</Text>
-						
-						</View>	
-					))}
-				</ScrollView>
+				>
+					<Text style={estilos.texto}>
+						{this.state.opcao == "Emprestar" ? "Emprestar" : "Devolver"}
+					</Text>
+					
+				</Pressable>
 			</View>
 		);
 	}

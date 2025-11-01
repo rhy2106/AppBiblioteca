@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, TextInput, Button, ScrollView, Alert, Pressable} from "react-native";
 import { ip } from "../model/";
+import { estilos } from "../styles/Estilos";
 
 class Fila extends React.Component{
 	constructor(props){
@@ -60,25 +61,31 @@ class Fila extends React.Component{
 
 	render(){
 		return(
-			<View>
-				<ScrollView style={{ marginTop: 10 }}>
-					<Text> Livros Reservados </Text>
+			<View style={estilos.container}>
+				<ScrollView style={ estilos.scroll }>
+					<Text style={estilos.titulo}> Livros Reservados </Text>
 					{this.state.livros_reservados.map((livro,index)=>(
-						<View key={index}>
-							<Text> {livro.nome} </Text>
-							<Text> {livro.autor} </Text>
-							<Text>
-								{ livro.disponiveis >= livro.posicao ? "Disponivel" : "Indisponivel"}
+						<View
+							style={estilos.scroll_item}
+							key={index}
+						>
+							<Text style={estilos.texto} > {livro.nome} </Text>
+							<Text style={estilos.texto} > {livro.autor} </Text>
+							<Text style={estilos.texto} >
+								{ livro.disponiveis >= livro.posicao ? " Disponivel" : " Indisponivel"}
 							</Text>
 						</View>
 					))}
-					<Text> Livros Emprestados </Text>
+					<Text style={estilos.titulo}> Livros Emprestados </Text>
 					{this.state.livros_emprestados.map((livro,index)=>(
-						<View key={index}>
-							<Text> {livro.nome} </Text>
-							<Text> {livro.autor} </Text>
-							<Text> {"Emprestimo: " + new Date(livro.Emprestimo).toLocaleDateString('pt-BR')} </Text>
-							<Text> {"Prazo: " + new Date(livro.Prazo).toLocaleDateString('pt-BR')} </Text>
+						<View 
+							style={estilos.scroll_item}
+							key={index}
+						>
+							<Text style={estilos.scroll_item} > {livro.nome} </Text>
+							<Text style={estilos.scroll_item} > {livro.autor} </Text>
+							<Text style={estilos.scroll_item} > {"Emprestimo: " + new Date(livro.Emprestimo).toLocaleDateString('pt-BR')} </Text>
+							<Text style={estilos.scroll_item} > {"Prazo: " + new Date(livro.Prazo).toLocaleDateString('pt-BR')} </Text>
 						</View>
 					))}
 				</ScrollView>

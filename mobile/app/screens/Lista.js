@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, TextInput, Button, ScrollView, Alert, Pressable} from "react-native";
 import { ip } from "../model/";
+import { estilos } from "../styles/Estilos";
 
 class Lista extends React.Component{
 	constructor(props){
@@ -60,24 +61,29 @@ class Lista extends React.Component{
 
 	render(){
 		return(
-			<View>
-				<ScrollView style={{ marginTop: 10 }}>
+			<View style={estilos.container}>
+				<ScrollView style={estilos.scroll}>
 					{this.state.resultados.map((livro, index) => (
-						<View key={index}>
-							<Pressable style={{ marginBottom: 10, padding: 5, borderWidth: 1, borderColor: "#ddd" }}
+						<View
+							key={index}
+							style={estilos.scroll_item_inline}
+						>
+							<Pressable style={estilos.scroll_button}
 								onPress={()=>this.props.navigation.navigate("Livro",{usuario:this.state.usuario,livro})}
 							>
-								<Text>Nome: {livro.nome}</Text>
-								<Text>Autor: {livro.autor}</Text>
-								<Text>Gênero: {livro.genero}</Text>
-								<Text>Nota: {livro.nota}</Text>
+								<Text style={estilos.texto}> Nome: {livro.nome}</Text>
+								<Text style={estilos.texto}> Autor: {livro.autor}</Text>
+								<Text style={estilos.texto}> Gênero: {livro.genero}</Text>
+								<Text style={estilos.texto}> Nota: {livro.nota}</Text>
 							</Pressable>
 
 							<Pressable
+								style={estilos.scroll_remove_button}
 								onPress={()=>this.remover(livro)}
 							>
-								<Text> Remover da Lista </Text>
+								<Text style={estilos.texto}> Remover da lista </Text>
 							</Pressable>
+								
 						</View>
 					))}
 				</ScrollView>

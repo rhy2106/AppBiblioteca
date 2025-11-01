@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, TextInput, Button, Alert, TouchableOpacity, StyleSheet, ScrollView, Pressable } from "react-native";
 import { ip } from '../model/';
+import { estilos } from '../styles/Estilos';
 
 class Livro extends React.Component {
 	constructor(props) {
@@ -110,38 +111,64 @@ class Livro extends React.Component {
 	render() {
 		const nota = [1,2,3,4,5];
 		return (
-			<View>
-				<Text> {this.state.livro.nome} </Text>
-				<Text> {this.state.livro.autor} </Text>
-				<Text> {this.state.livro.genero} </Text>
-				<Text> {this.state.livro.descricao} </Text>
+			<View style={estilos.container}>
+				<Text style={estilos.titulo}> {this.state.livro.nome} </Text>
+				<View>
+					<Text style={estilos.texto}> {"Autor: " + this.state.livro.autor} </Text>
+					<Text style={estilos.texto}> {"Genero: " + this.state.livro.genero} </Text>
+					<Text style={estilos.texto}> {"Avalição: " + this.state.livro.nota} </Text>
+				</View>
+				<Text style={estilos.texto}> {"Descricao:"} </Text>
+				<Text style={estilos.texto}> {this.state.livro.descricao} </Text>
+
 				<Pressable
+					style={estilos.botao}
 					onPress={()=>this.adicionarLista()}
 				>
-					<Text> Adicionar a Lista </Text>
+					<Text style={estilos.texto}> Adicionar a Lista </Text>
 				</Pressable>
-				<Button title="Reservar" onPress={() => this.reservar()} />
-				<ScrollView>
-					<View>
-						<Text> Comentarios </Text>
-						<TextInput value={this.state.comentario} onChangeText={(comentario)=>{this.setState({comentario})}}/>
-						{nota.map((o)=>{
-							return (
-								<TouchableOpacity
-									key={o}
-									onPress={()=>this.setState({nota:o})}
-								>
-									<Text> {o} </Text>
-								</TouchableOpacity>
-							)
-						})}
-						<Button title={"Comentar"} onPress={()=>this.comentar()}/>
-
+				<Pressable
+					style={estilos.botao}	
+					onPress={() => this.reservar()}
+				>
+					<Text style={estilos.texto}> {"Reservar"} </Text>
+				</Pressable>	
+					
+				<ScrollView style={estilos.scroll} >
+					<Text style={estilos.titulo}> Comentarios </Text>
+					<View style={estilos.scroll_item}>
+						<View style={estilos.inline}>
+							<TextInput
+								multiline
+								style={estilos.comentario}
+								value={this.state.comentario}
+								onChangeText={(comentario)=>{this.setState({comentario})}}
+							/>
+						</View>
+						<View style={estilos.inline}>
+							{nota.map((o)=>{
+								return (
+									<TouchableOpacity
+										style={[estilos.botao,this.state.nota >= o ? estilos.selecionado : estilos.nao_selecionado]}
+										key={o}
+										onPress={()=>this.setState({nota:o})}
+									>
+										<Text style={estilos.texto}> {o} </Text>
+									</TouchableOpacity>
+								)
+							})}
+							<Pressable
+								style={estilos.botao}
+								onPress={()=>this.comentar()}
+							>
+								<Text style={estilos.texto}> {"Comentar"} </Text>
+							</Pressable>
+						</View>
 					</View>
 					{this.state.avaliacoes.map((comentario,index) => (
-						<View key={index}>
-							<Text> {comentario.usuario + " nota: " + comentario.nota} </Text>
-							<Text> {comentario.descricao} </Text>
+						<View style={estilos.scroll_item} key={index}>
+							<Text style={estilos.texto} > {comentario.usuario + " nota: " + comentario.nota} </Text>
+							<Text style={estilos.texto} > {comentario.descricao} </Text>
 						</View>
 					))}
 				</ScrollView>
