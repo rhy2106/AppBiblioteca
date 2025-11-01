@@ -393,6 +393,11 @@ app.post('/emprestar', async (req,res) => {
 					WHERE "FID" = ${FID};
 				`;
 				await tx`
+					UPDATE "Usuarios"
+						SET pontuacao = pontuacao + 1
+					WHERE "UID" = ${UID};
+				`;
+				await tx`
 					DELETE FROM "Fila_Emprestimo"
 					WHERE "UID" = ${UID}
 						AND "LID" = ${LID};
@@ -527,6 +532,79 @@ app.post('/comentar', async (req,res) => {
 		} else{
 			res.status(500).json({ success: false, mensagem: err.message });
 		}
+	}
+});
+
+app.post('/fila_tinder', async (req,res) => {
+	const { UID, genero, preferencia } = req.body;
+	try{
+		const result = await sql.begin(async tx => {
+			const fila = await tx`
+				SELECT *
+					FROM "Fila_Tinder"
+				WHERE genero = ${preferencia}
+					AND preferencia = ${genero}
+			`;
+			if(fila.length > 0){
+				const uid = fila[0].UID;
+				await tx`
+					DELETE FROM "Fila_Tinder"
+						WHERE "UID" = ${uid}
+				`;
+				await tx`
+					INSERT INTO "Match" ( pessoa1, pessoa2, dia, sala )
+					VALUES ( ${UID}, ${uid}, NOW() + INTERVAL '2 days', ${Math.floor(Math.random()*10)%10} )
+				`;
+				await tx`
+					UPDATE "Usuarios"
+						SET pontuacao = pontuacao - 5
+					WHERE "UID" = ${UID}
+				`;
+				return 1;
+			} else{
+				await tx`
+					INSERT INTO "Fila_Tinder" ( "UID", genero, preferencia )
+					VALUES ( ${UID}, ${genero}, ${preferencia} )
+				`;
+				return 0;
+			}
+		});
+		console.log(result);
+		if(result === 1)
+			res.json({success: true, message: "Match encontrado"});
+		else
+			res.json({success:true, message: "Procurando Match"});
+	}catch(err){
+		res.status(500).json({ success: false, mensagem: err.message });
+	}
+});
+
+app.post('/encontros', async (req,res) => {
+	const { UID } = req.body;
+	try{
+		const result = await sql.begin(async tx => {
+			const matchs_antigos = await tx`
+				SELECT *
+					FROM "Match"
+					JOIN "Usuarios"
+						ON ("Match"."pessoa1" = "Usuarios"."UID"
+								AND "Match"."pessoa1" != ${UID})
+							OR ("Match"."pessoa2" = "Usuarios"."UID"
+								AND "Match"."pessoa2" != ${UID})
+				WHERE "pessoa1" = ${UID}
+					OR "pessoa2" = ${UID}
+			`;
+			const procurando = await tx`
+				SELECT *
+					FROM "Fila_Tinder"
+				WHERE "UID" = ${UID}
+			`;
+			return { matchs_antigos, procurando:procurando.length > 0 };
+		});
+		console.log(result);
+		res.json({data: result.matchs_antigos, procurando: result.procurando});
+	}catch(err){
+		res.status(500).json({ success: false, mensagem: err.message });
 	}
 });
 

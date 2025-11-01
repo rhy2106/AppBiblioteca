@@ -10,5 +10,6 @@ import Perfil from './Perfil';
 import Historico from './Historico';
 import Usuarios from './Usuarios';
 import Lista from './Lista';
+import Tinder from './Tinder';
 
-export { Login, Cadastro, Principal, Registrar, Livro, Recepcao, Fila, Estoque, Perfil, Historico, Usuarios, Lista };
+export { Login, Cadastro, Principal, Registrar, Livro, Recepcao, Fila, Estoque, Perfil, Historico, Usuarios, Lista, Tinder };

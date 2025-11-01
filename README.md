@@ -40,11 +40,10 @@
   - [X] Adicionar livro a Lista de Livros
   - [X] Remover livro a Lista de Livros
 
-- [ ] Tinder Livro
-  - [ ] Match
-    - [ ] Fila de espera
-  - [ ] Listar Matchs
-  - [ ] chat?
+- [X] Tinder Livro
+  - [X] Match
+    - [X] Fila de espera
+  - [X] Listar Matchs
 
 - [ ] Doar Livro
 - [ ] Sugerir melhorias
