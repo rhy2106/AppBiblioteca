@@ -5,7 +5,7 @@ O AppBiblioteca é um aplicativo de gerenciamento de biblioteca, que permite o c
 - [Objetivos/Motivações](#objetivos-e-motivações)
 - [Funções feitas](#funções-feitas)
 
-- [Tecnologias Utilizadas](tecnologias-utilizadas)
+- [Tecnologias Utilizadas](#tecnologias-utilizadas)
 - [Como rodar o MVP localmente](#como-rodar-localmente)
   - [pré-requisitos](#pré-requisitos)
   - [variaveis de ambiente](#variaveis-de-ambiente)
