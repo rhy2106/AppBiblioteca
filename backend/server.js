@@ -106,9 +106,9 @@ app.post('/pesquisa',async (req,res) => {
 						GROUP BY "LID"
 					) AS a
 						ON "Livros"."LID" = a."LID"
-				WHERE nome % ${pesquisa}
-					OR autor % ${pesquisa}
-					OR genero % ${pesquisa}
+				WHERE similarity(nome,${pesquisa}) > 0
+					OR similarity(autor,${pesquisa}) > 0
+					OR similarity(genero,${pesquisa}) > 0
 				ORDER BY GREATEST(
 					similarity(nome, ${pesquisa}),
 					similarity(genero, ${pesquisa}),

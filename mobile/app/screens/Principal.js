@@ -17,7 +17,7 @@ class Principal extends React.Component{
 		const {navigation} = this.props;
 		this.pesquisar();
 		this.unsubscribeFocus = navigation.addListener("focus", () => {
-			this.pesquisar()
+			this.pesquisar();
 		});
 	}
 
