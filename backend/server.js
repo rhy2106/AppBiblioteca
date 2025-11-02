@@ -41,136 +41,146 @@ app.post('/cadastrar',async (req,res) => {
 
 app.post('/pesquisa',async (req,res) => {
 	const { pesquisa } = req.body;
-	let result;
-	if( pesquisa == "" ){
-		result = await sql`
-			SELECT
-				"Livros"."LID" AS "LID",
-				"Livros".nome AS nome,
-				"Livros".autor AS autor,
-				"Livros".genero AS genero,
-				q.quantidade AS quantidade,
-				d.disponiveis AS disponiveis,
-				COALESCE(a.nota, 0) AS nota
-			FROM "Livros"
-				JOIN ( 
-					SELECT "LID", COUNT(*) AS quantidade
-						FROM "Copia_Fisica"
-					GROUP BY "LID"
-				) AS q
-					ON "Livros"."LID" = q."LID"
-				LEFT JOIN ( 
-					SELECT "LID", COUNT(*) AS disponiveis
-						FROM "Copia_Fisica"
-					WHERE "Emprestado" = false
-					GROUP BY "LID"
-				) AS d
-					ON "Livros"."LID" = d."LID"
-				LEFT JOIN (
-					SELECT "LID", ROUND(SUM(nota)/COUNT("LID"),2) AS nota
-						FROM "Comentarios"
-					GROUP BY "LID"
-				) AS a
-					ON "Livros"."LID" = a."LID"
-			LIMIT 50;
-		`;
-	}else{
-		result = await sql`
-			SELECT
-				"Livros"."LID" AS "LID",
-				"Livros".nome AS nome,
-				"Livros".autor AS autor,
-				"Livros".genero AS genero,
-				q.quantidade AS quantidade,
-				d.disponiveis AS disponiveis,
-				COALESCE(a.nota, 0) AS nota
-			FROM "Livros"
-				JOIN ( 
-					SELECT "LID", COUNT(*) AS quantidade
-						FROM "Copia_Fisica"
-					GROUP BY "LID"
-				) AS q
-					ON "Livros"."LID" = q."LID"
-				LEFT JOIN ( 
-					SELECT "LID", COUNT(*) AS disponiveis
-						FROM "Copia_Fisica"
-					WHERE "Emprestado" = false
-					GROUP BY "LID"
-				) AS d
-					ON "Livros"."LID" = d."LID"
-				LEFT JOIN (
-					SELECT "LID", ROUND(SUM(nota)/COUNT("LID"),2) AS nota
-						FROM "Comentarios"
-					GROUP BY "LID"
-				) AS a
-					ON "Livros"."LID" = a."LID"
-			WHERE nome % ${pesquisa}
-				OR autor % ${pesquisa}
-				OR genero % ${pesquisa}
-			ORDER BY GREATEST(
-				similarity(nome, ${pesquisa}),
-				similarity(genero, ${pesquisa}),
-				similarity(autor, ${pesquisa})
-			) DESC
-			LIMIT 50;
-		`;
+	console.log(pesquisa);
+	try{
+		let result;
+		if( pesquisa == "" ){
+			result = await sql`
+				SELECT
+					"Livros"."LID" AS "LID",
+					"Livros".nome AS nome,
+					"Livros".autor AS autor,
+					"Livros".genero AS genero,
+					COALESCE(q.quantidade,0) AS quantidade,
+					COALESCE(d.disponiveis,0) AS disponiveis,
+					COALESCE(a.nota, 0) AS nota
+				FROM "Livros"
+					LEFT JOIN ( 
+						SELECT "LID", COUNT(*) AS quantidade
+							FROM "Copia_Fisica"
+						GROUP BY "LID"
+					) AS q
+						ON "Livros"."LID" = q."LID"
+					LEFT JOIN ( 
+						SELECT "LID", COUNT(*) AS disponiveis
+							FROM "Copia_Fisica"
+						WHERE "Emprestado" = false
+						GROUP BY "LID"
+					) AS d
+						ON "Livros"."LID" = d."LID"
+					LEFT JOIN (
+						SELECT "LID", ROUND(SUM(nota)/COUNT("LID"),2) AS nota
+							FROM "Comentarios"
+						GROUP BY "LID"
+					) AS a
+						ON "Livros"."LID" = a."LID"
+				LIMIT 50;
+			`;
+		}else{
+			result = await sql`
+				SELECT
+					"Livros"."LID" AS "LID",
+					"Livros".nome AS nome,
+					"Livros".autor AS autor,
+					"Livros".genero AS genero,
+					COALESCE(q.quantidade,0) AS quantidade,
+					COALESCE(d.disponiveis,0) AS disponiveis,
+					COALESCE(a.nota, 0) AS nota
+				FROM "Livros"
+					LEFT JOIN ( 
+						SELECT "LID", COUNT(*) AS quantidade
+							FROM "Copia_Fisica"
+						GROUP BY "LID"
+					) AS q
+						ON "Livros"."LID" = q."LID"
+					LEFT JOIN ( 
+						SELECT "LID", COUNT(*) AS disponiveis
+							FROM "Copia_Fisica"
+						WHERE "Emprestado" = false
+						GROUP BY "LID"
+					) AS d
+						ON "Livros"."LID" = d."LID"
+					LEFT JOIN (
+						SELECT "LID", ROUND(SUM(nota)/COUNT("LID"),2) AS nota
+							FROM "Comentarios"
+						GROUP BY "LID"
+					) AS a
+						ON "Livros"."LID" = a."LID"
+				WHERE nome % ${pesquisa}
+					OR autor % ${pesquisa}
+					OR genero % ${pesquisa}
+				ORDER BY GREATEST(
+					similarity(nome, ${pesquisa}),
+					similarity(genero, ${pesquisa}),
+					similarity(autor, ${pesquisa})
+				) DESC
+				LIMIT 50;
+			`;
+		}
+		res.json(result);
+		console.log(result);
+	} catch(err){
+		res.status(500).json({ success: false, mensagem: err.message });
 	}
-	res.json(result);
 });
 
 app.post('/buscar',async (req,res) => {
 	const { pesquisa } = req.body;
 	let result;
-	if( pesquisa == "" ){
-		result = await sql`
-			SELECT *, COALESCE(a.atrasados, 0) AS atrasados, COALESCE(r.reservados, 0) AS reservados
-			FROM "Usuarios"
-				LEFT JOIN ( 
-					SELECT "UID", COUNT(*) AS atrasados
-						FROM "Pegar_Emprestado"
-					WHERE "Prazo" < now()
-					GROUP BY "UID"
-				) AS a
-					ON a."UID" = "Usuarios"."UID"
-				LEFT JOIN ( 
-					SELECT "UID", COUNT(*) AS reservados
-						FROM "Fila_Emprestimo"
+	try{
+		if( pesquisa == "" ){
+			result = await sql`
+				SELECT *, COALESCE(a.atrasados, 0) AS atrasados, COALESCE(r.reservados, 0) AS reservados
+				FROM "Usuarios"
+					LEFT JOIN ( 
+						SELECT "UID", COUNT(*) AS atrasados
+							FROM "Pegar_Emprestado"
+						WHERE "Prazo" < now()
 						GROUP BY "UID"
-				) AS r
-					ON r."UID" = "Usuarios"."UID"
-			LIMIT 50;
-		`;
-	}else{
-		result = await sql`
-			SELECT *, COALESCE(a.atrasados, 0) AS atrasados, COALESCE(r.reservados, 0) AS reservados
-			FROM "Usuarios"
-				LEFT JOIN ( 
-					SELECT "UID", COUNT(*) AS atrasados
-						FROM "Pegar_Emprestado"
-					WHERE "Prazo" < now()
-					GROUP BY "UID"
-				) AS a
-					ON a."UID" = "Usuarios"."UID"
-				LEFT JOIN ( 
-					SELECT "UID", COUNT(*) AS reservados
-						FROM "Fila_Emprestimo"
+					) AS a
+						ON a."UID" = "Usuarios"."UID"
+					LEFT JOIN ( 
+						SELECT "UID", COUNT(*) AS reservados
+							FROM "Fila_Emprestimo"
+							GROUP BY "UID"
+					) AS r
+						ON r."UID" = "Usuarios"."UID"
+				LIMIT 50;
+			`;
+		}else{
+			result = await sql`
+				SELECT *, COALESCE(a.atrasados, 0) AS atrasados, COALESCE(r.reservados, 0) AS reservados
+				FROM "Usuarios"
+					LEFT JOIN ( 
+						SELECT "UID", COUNT(*) AS atrasados
+							FROM "Pegar_Emprestado"
+						WHERE "Prazo" < now()
 						GROUP BY "UID"
-				) AS r
-					ON r."UID" = "Usuarios"."UID"
-			WHERE usuario % ${pesquisa}
-				OR email % ${pesquisa}
-				OR genero % ${pesquisa}
-				OR "Usuarios"."UID"::text % ${pesquisa}
-			ORDER BY GREATEST(
-				similarity(usuario, ${pesquisa}),
-				similarity(email, ${pesquisa}),
-				similarity(genero, ${pesquisa}),
-				similarity("Usuarios"."UID"::text, ${pesquisa})
-			) DESC
-			LIMIT 50;
-		`;
+					) AS a
+						ON a."UID" = "Usuarios"."UID"
+					LEFT JOIN ( 
+						SELECT "UID", COUNT(*) AS reservados
+							FROM "Fila_Emprestimo"
+							GROUP BY "UID"
+					) AS r
+						ON r."UID" = "Usuarios"."UID"
+				WHERE usuario % ${pesquisa}
+					OR email % ${pesquisa}
+					OR genero % ${pesquisa}
+					OR "Usuarios"."UID"::text % ${pesquisa}
+				ORDER BY GREATEST(
+					similarity(usuario, ${pesquisa}),
+					similarity(email, ${pesquisa}),
+					similarity(genero, ${pesquisa}),
+					similarity("Usuarios"."UID"::text, ${pesquisa})
+				) DESC
+				LIMIT 50;
+			`;
+		}
+		res.json(result);
+	} catch(err){
+		res.status(500).json({ success: false, mensagem: err.message });
 	}
-	res.json(result);
 });
 
 
@@ -247,7 +257,7 @@ app.post('/fila', async (req,res) => {
 	const { UID } = req.body;
 	try{
 		const result = await sql`
-			SELECT DISTINCT nome, autor, "Livros"."LID" as "LID", posicao, disponiveis
+			SELECT DISTINCT nome, autor, "Livros"."LID" as "LID", posicao, COALESCE(disponiveis,0)
 				FROM "Fila_Emprestimo"
 				JOIN "Livros"
 					ON "Livros"."LID" = "Fila_Emprestimo"."LID"
@@ -261,7 +271,7 @@ app.post('/fila', async (req,res) => {
 				) AS p
 					ON p."UID" = "Fila_Emprestimo"."UID"
 						AND p."LID" = "Fila_Emprestimo"."LID"
-				JOIN (
+				LEFT JOIN (
 					SELECT "LID", COUNT(*) AS disponiveis
 					FROM "Copia_Fisica"
 					WHERE "Emprestado" = false
@@ -354,7 +364,7 @@ app.post('/emprestar', async (req,res) => {
 		console.log(id);
 		const LID = id[0].LID;
 		const fila = await sql`
-			SELECT DISTINCT nome, autor, "Livros"."LID" as "LID", posicao, disponiveis
+			SELECT DISTINCT nome, autor, "Livros"."LID" as "LID", posicao, COALESCE(disponiveis,0)
 				FROM "Fila_Emprestimo"
 				JOIN "Livros"
 					ON "Livros"."LID" = "Fila_Emprestimo"."LID"
@@ -368,7 +378,7 @@ app.post('/emprestar', async (req,res) => {
 				) AS p
 					ON p."UID" = "Fila_Emprestimo"."UID"
 						AND p."LID" = "Fila_Emprestimo"."LID"
-				JOIN (
+				LEFT JOIN (
 					SELECT "LID", COUNT(*) AS disponiveis
 						FROM "Copia_Fisica"
 					WHERE "Emprestado" = false
