@@ -24,8 +24,6 @@ O app foi desenvolvido como projeto na disciplina `CCG410 - Engenharia de Softwa
 
 - [X] Controle de Estoque
   - [X] Cadastrar Livro
-    - [X] Cadastrar Autor
-    - [X] Cadastrar Genero de Livro
   - [X] Buscar livro
   - [X] Avaliar Livro
   - [ ] Livros em Alta / Ranking
