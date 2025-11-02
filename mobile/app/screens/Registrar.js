@@ -17,6 +17,7 @@ class Registrar extends React.Component {
 			resultados: [],
 		};
 	}
+
 	async gravar_livro(){
 		const { nome, autor, genero, descricao } = this.state;
 		if (!nome || !autor || !genero || !descricao) return;
@@ -33,45 +34,6 @@ class Registrar extends React.Component {
 				Alert.alert("Erro", data.mensagem);
 		} catch (err) {
 			console.error(err);
-			Alert.alert("Erro", "Não foi possível conectar ao servidor");
-		}
-	}
-
-	async gravar_autor() {
-		const { autor } = this.state;
-		if (!autor) return;
-		try {
-			const res = await fetch(`http://${ip}/registrar_autor`, {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ autor }),
-			});
-			const data = await res.json();
-			if(data.success)
-				Alert.alert("Sucesso", "Autor cadastrado!");
-			else
-				Alert.alert("Erro", data.mensagem);
-		} catch (err) {
-			console.error(err);
-			Alert.alert("Erro", "Não foi possível conectar ao servidor");
-		}
-	}
-
-	async gravar_genero() {
-		const { genero } = this.state;
-		if (!genero) return;
-		try {
-			const res = await fetch(`http://${ip}/registrar_genero`, {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ genero }),
-			});
-			const data = await res.json();
-			if(data.success)
-				Alert.alert("Sucesso", "Genero cadastrado!");
-			else
-				Alert.alert("Erro", data.mensagem);
-		} catch (err){
 			Alert.alert("Erro", "Não foi possível conectar ao servidor");
 		}
 	}
@@ -113,7 +75,7 @@ class Registrar extends React.Component {
 	}
 
 	render() {
-		const op = ["Livros","Autor","Genero","Livro Fisico"]
+		const op = ["Livros","Livro Fisico"]
 		return (
 			<View style={estilos.container}>
 				<View style={estilos.inline}>
@@ -131,46 +93,7 @@ class Registrar extends React.Component {
 					})}
 				</View>
 
-				{this.state.opcao == "Genero" && 
-					<View>
-						<Text style={estilos.titulo}>Registrar Genero</Text>
-						<View style={estilos.inline}>
-							<Text style={estilos.texto}>Genero:</Text>
-							<TextInput
-								style={estilos.input}
-								value={this.state.genero}
-								onChangeText={(genero) => this.setState({ genero })}
-							/>
-						</View>
-						<Pressable
-							onPress={() => this.gravar_genero()}
-							style={estilos.botao}
-						>
-							<Text style={estilos.texto}> {"Registrar"} </Text>
-						</Pressable>	
-					</View>
-
-				|| this.state.opcao == "Autor" && 
-					<View>
-						<Text style={estilos.titulo}>Registrar Autor</Text>
-						<View style={estilos.inline}>
-							<Text style={estilos.texto}>Autor:</Text>
-							<TextInput
-								style={estilos.input}
-								value={this.state.autor}
-								onChangeText={(autor) => this.setState({ autor })}
-							/>
-							
-						</View>
-						<Pressable
-							onPress={() => this.gravar_autor()}
-							style={estilos.botao}
-						>
-							<Text style={estilos.texto}> {"Registrar"} </Text>
-						</Pressable>	
-					</View>
-
-				|| this.state.opcao == "Livros" &&
+				{this.state.opcao == "Livros" &&
 					<View>
 						<Text style={estilos.titulo}>Registrar Livro</Text>
 						<View style={estilos.inline}>

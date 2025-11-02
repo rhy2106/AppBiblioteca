@@ -1,13 +1,3 @@
-CREATE TABLE "Autor" (
-  "autor" character varying NOT NULL,
-  CONSTRAINT "Autor_pkey" PRIMARY KEY ("autor")
-);
-
-CREATE TABLE "Genero" (
-  "genero" character varying NOT NULL,
-  CONSTRAINT "Genero_pkey" PRIMARY KEY ("genero")
-);
-
 CREATE TABLE "Usuarios" (
   "UID" uuid NOT NULL DEFAULT gen_random_uuid(),
   "usuario" character varying NOT NULL UNIQUE,
@@ -25,9 +15,7 @@ CREATE TABLE "Livros" (
   "descricao" text NOT NULL,
   "autor" character varying NOT NULL,
   "genero" character varying NOT NULL,
-  CONSTRAINT "Livros_pkey" PRIMARY KEY ("LID"),
-  CONSTRAINT "Livro_autor_fkey" FOREIGN KEY ("autor") REFERENCES "Autor"("autor"),
-  CONSTRAINT "Livro_genero_fkey" FOREIGN KEY ("genero") REFERENCES "Genero"("genero")
+  CONSTRAINT "Livros_pkey" PRIMARY KEY ("LID")
 );
 
 CREATE TABLE "Copia_Fisica" (
@@ -48,12 +36,6 @@ CREATE TABLE "Pegar_Emprestado" (
   CONSTRAINT "Pegar_Emprestado_pkey" PRIMARY KEY ("EID"),
   CONSTRAINT "Pegar_Emprestado_FID_fkey" FOREIGN KEY ("FID") REFERENCES "Copia_Fisica"("FID"),
   CONSTRAINT "Pegar_Emprestado_UID_fkey" FOREIGN KEY ("UID") REFERENCES "Usuarios"("UID")
-);
-
-CREATE TABLE "Historico" (
-  "EID" uuid NOT NULL,
-  CONSTRAINT "Historico_pkey" PRIMARY KEY ("EID"),
-  CONSTRAINT "Historico_EID_fkey" FOREIGN KEY ("EID") REFERENCES "Pegar_Emprestado"("EID")
 );
 
 CREATE TABLE "Comentarios" (
@@ -109,9 +91,10 @@ CREATE TABLE "Match" (
 );
 
 CREATE TABLE "Erro_Sugestao" (
+  "RID" uuid NOT NULL DEFAULT gen_random_uuid(),
   "UID" uuid NOT NULL DEFAULT gen_random_uuid(),
   "descricao" text NOT NULL,
-  CONSTRAINT "Erro_Sugestao_pkey" PRIMARY KEY ("UID"),
+  CONSTRAINT "Erro_Sugestao_pkey" PRIMARY KEY ("RID"),
   CONSTRAINT "Erro_Sugestao_UID_fkey" FOREIGN KEY ("UID") REFERENCES "Usuarios"("UID")
 );
 

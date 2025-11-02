@@ -219,40 +219,6 @@ app.post('/registrar_livro_fisico', async (req,res) => {
 	}
 });
 
-app.post('/registrar_autor',async (req,res) => {
-	const {autor} = req.body;
-	try{
-		const result = await sql`
-			INSERT INTO "Autor" (autor)
-			VALUES (${autor})
-		`;
-		res.json({success:true, mensagem: 'Autor cadastrado' });
-	} catch(err){
-		if(err.code === '23505'){
-			res.status(400).json({ success: false, mensagem: 'Autor já cadastrado!' });
-		} else{
-			res.status(500).json({ success: false, mensagem: err.message });
-		}
-	}
-});
-
-app.post('/registrar_genero', async (req,res) => {
-	const {genero} = req.body;
-	try{
-		const result = await sql`
-			INSERT INTO "Genero" (genero)
-			VALUES (${genero})
-		`;
-		res.json({success:true, mensagem: 'Genero cadastrado' });
-	} catch(err){
-		if(err.code === '23505'){
-			res.status(400).json({ success: false, mensagem: 'Genero já cadastrado!' });
-		} else{
-			res.status(500).json({ success: false, mensagem: err.message });
-		}
-	}
-});
-
 app.post('/fila', async (req,res) => {
 	const { UID } = req.body;
 	try{
