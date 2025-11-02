@@ -30,7 +30,7 @@ class Recepcao extends React.Component {
 			} else
 				Alert.alert("Erro", data.mensagem);
 		} catch(err){
-			Alert.alert("Erro", "Não foi possível conectar ao servidor");
+			Alert.alert("Erro", err.message);
 		}
 	}
 
@@ -44,8 +44,9 @@ class Recepcao extends React.Component {
 				body: JSON.stringify({ UID, FID }),
 			});
 			const data = await res.json();
+			console.log(data);
 			if(data.success){
-				Alert.alert("Sucesso", data.mesagem);
+				Alert.alert("Sucesso", data.mensagem);
 			}else
 				Alert.alert("Erro", data.mensagem);
 		} catch(err){

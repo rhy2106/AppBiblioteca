@@ -51,6 +51,7 @@ app.post('/pesquisa',async (req,res) => {
 					"Livros".nome AS nome,
 					"Livros".autor AS autor,
 					"Livros".genero AS genero,
+					"Livros".descricao,
 					COALESCE(q.quantidade,0) AS quantidade,
 					COALESCE(d.disponiveis,0) AS disponiveis,
 					COALESCE(a.nota, 0) AS nota
@@ -83,6 +84,7 @@ app.post('/pesquisa',async (req,res) => {
 					"Livros".nome AS nome,
 					"Livros".autor AS autor,
 					"Livros".genero AS genero,
+					"Livros".descricao,
 					COALESCE(q.quantidade,0) AS quantidade,
 					COALESCE(d.disponiveis,0) AS disponiveis,
 					COALESCE(a.nota, 0) AS nota
@@ -130,7 +132,13 @@ app.post('/buscar',async (req,res) => {
 	try{
 		if( pesquisa == "" ){
 			result = await sql`
-				SELECT *, COALESCE(a.atrasados, 0) AS atrasados, COALESCE(r.reservados, 0) AS reservados
+				SELECT 
+					"Usuarios"."UID",
+					"Usuarios".usuario,
+					"Usuarios".email,
+					"Usuarios".genero,
+					COALESCE(a.atrasados, 0) AS atrasados,
+					COALESCE(r.reservados, 0) AS reservados
 				FROM "Usuarios"
 					LEFT JOIN ( 
 						SELECT "UID", COUNT(*) AS atrasados
@@ -223,8 +231,13 @@ app.post('/fila', async (req,res) => {
 	const { UID } = req.body;
 	try{
 		const result = await sql`
-			SELECT DISTINCT nome, autor, "Livros"."LID" as "LID", posicao, COALESCE(disponiveis,0)
-				FROM "Fila_Emprestimo"
+			SELECT DISTINCT
+				nome,
+				autor,
+				"Livros"."LID" AS "LID",
+				posicao,
+				COALESCE(disponiveis,0) AS disponiveis
+			FROM "Fila_Emprestimo"
 				JOIN "Livros"
 					ON "Livros"."LID" = "Fila_Emprestimo"."LID"
 				JOIN (
@@ -330,8 +343,13 @@ app.post('/emprestar', async (req,res) => {
 		console.log(id);
 		const LID = id[0].LID;
 		const fila = await sql`
-			SELECT DISTINCT nome, autor, "Livros"."LID" as "LID", posicao, COALESCE(disponiveis,0)
-				FROM "Fila_Emprestimo"
+			SELECT DISTINCT
+				nome,
+				autor,
+				"Livros"."LID" AS "LID",
+				posicao,
+				COALESCE(disponiveis,0) AS disponiveis
+			FROM "Fila_Emprestimo"
 				JOIN "Livros"
 					ON "Livros"."LID" = "Fila_Emprestimo"."LID"
 				JOIN (
@@ -379,6 +397,7 @@ app.post('/emprestar', async (req,res) => {
 						AND "LID" = ${LID};
 				`;
 			});
+			console.log('alo');
 			res.json({success:true, mensagem: 'Livro emprestado' });
 		}
 	} catch(err){

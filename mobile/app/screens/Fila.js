@@ -82,10 +82,10 @@ class Fila extends React.Component{
 							style={estilos.scroll_item}
 							key={index}
 						>
-							<Text style={estilos.scroll_item} > {livro.nome} </Text>
-							<Text style={estilos.scroll_item} > {livro.autor} </Text>
-							<Text style={estilos.scroll_item} > {"Emprestimo: " + new Date(livro.Emprestimo).toLocaleDateString('pt-BR')} </Text>
-							<Text style={estilos.scroll_item} > {"Prazo: " + new Date(livro.Prazo).toLocaleDateString('pt-BR')} </Text>
+							<Text style={estilos.texto} > {livro.nome} </Text>
+							<Text style={estilos.texto} > {livro.autor} </Text>
+							<Text style={estilos.texto} > {"Emprestimo: " + new Date(livro.Emprestimo).toLocaleDateString('pt-BR')} </Text>
+							<Text style={estilos.texto} > {"Prazo: " + new Date(livro.Prazo).toLocaleDateString('pt-BR')} </Text>
 						</View>
 					))}
 				</ScrollView>
