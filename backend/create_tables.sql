@@ -61,7 +61,7 @@ CREATE TABLE "Comentarios" (
   "LID" uuid NOT NULL DEFAULT gen_random_uuid(),
   "descricao" text NOT NULL,
   "nota" bigint,
-  CONSTRAINT "Comentarios_pkey" PRIMARY KEY ("UID"),
+  CONSTRAINT "Comentarios_pkey" PRIMARY KEY ("UID","LID"),
   CONSTRAINT "Comentarios_UID_fkey" FOREIGN KEY ("UID") REFERENCES "Usuarios"("UID"),
   CONSTRAINT "Comentarios_LID_fkey" FOREIGN KEY ("LID") REFERENCES "Livros"("LID")
 );
