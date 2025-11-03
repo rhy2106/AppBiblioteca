@@ -4,6 +4,7 @@ import sql from './db.js';
 const app = express();
 app.use(express.json());
 const PORT = 3000;
+const startTime = Date.now();
 
 app.post('/login', async (req,res) => {
 	const { email, senha } = req.body;
@@ -615,13 +616,22 @@ app.post('/encontros', async (req,res) => {
 	}
 });
 
-app.get('/', async (req, res) => {
+app.get('/health', async (req, res) => {
   try {
-    const result = await sql`SELECT 1 as ok`;
-    res.json({ mensagem: 'Conexão backend OK!', result });
+    await sql`SELECT 1`;
+
+    res.json({
+      status: 'ok',
+      uptime: Math.floor((Date.now() - startTime) / 1000) + 's',
+      database: 'connected',
+      version: '1.0.0'
+    });
   } catch (err) {
-    console.error('Erro ao conectar no banco:', err);
-    res.status(500).json({ mensagem: 'Erro ao conectar no banco', erro: err.message });
+    res.status(500).json({
+      status: 'error',
+      database: 'disconnected',
+      error: 'Falha na conexão com o banco'
+    });
   }
 });
 
