@@ -16,12 +16,13 @@ class Autenticacao extends React.Component{
 		return(
 			<Tab.Navigator
 				screenOptions={{
+					headerShown: false,
 					headerStyle: { backgroundColor: cor_header },
 					headerTintColor: cor_letra,
 
 					tabBarStyle: { backgroundColor: cor_header },
-					tabBarActiveTintColor: cor_tab,
-					tabBarInactiveTintColor: cor_letra,
+					tabBarActiveTintColor: "#e38652",
+					tabBarInactiveTintColor: "#4d4a49",
 				}}
 			>
                  <Tab.Screen name="login" component={Login}
@@ -33,7 +34,7 @@ class Autenticacao extends React.Component{
 				<Tab.Screen name="cadastro" component={Cadastro}
 					options={{
 					tabBarLabel: "Cadastro",
-					tabBarIcon:({color,size}) => (<FontAwesome name="sign-in" color={color} size={size}/>)
+					tabBarIcon:({color,size}) => (<FontAwesome name="sign-in" color={color} size={size}/>) 
 					}}
 				/>
 			</Tab.Navigator>

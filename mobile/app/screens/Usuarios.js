@@ -1,7 +1,7 @@
 import React from "react";
-import { View, Text, TextInput, Button, ScrollView, Alert, Pressable} from "react-native";
+import { View, Text, TextInput, Button, ScrollView, Alert, Pressable,StyleSheet, TouchableOpacity} from "react-native";
 import { ip } from "../model/";
-import { estilos } from '../styles/Estilos';
+import { estilos } from "../styles/UsuariosStyles";
 
 class Usuarios extends React.Component{
 	constructor(props){
@@ -51,29 +51,52 @@ class Usuarios extends React.Component{
 						style={estilos.input}
 						value={this.state.pesquisa}
 						onChangeText={(texto)=>this.setState({pesquisa:texto})}
+						placeholder="Nome, email, ID" 
+						placeholderTextColor="gray" 
 					/>
-					<Pressable 
+					<TouchableOpacity 
 						style={estilos.botao}
 						onPress={()=>this.buscar()}
+						activeOpacity={0.7}
 					>
-						<Text style={estilos.texto}> {"Buscar"} </Text>
-					</Pressable>
+						<Text style={estilos.texto2}> {"Buscar"} </Text>
+					</TouchableOpacity>
 				</View>
 				<ScrollView style={estilos.scroll}>
-					<Text style={estilos.titulo}> Usuarios </Text>
+					<Text style={estilos.titulo}> Usuários </Text>
+					<View style={estilos.linha}/>
 					{this.state.perfils.map((usuario,index)=>(
-						<Pressable 
+						<TouchableOpacity 
 							style={estilos.scroll_item}
 							onPress={()=>this.props.navigation.navigate("historico",{usuario})}
 							key={index}
-						>
-							<Text style={estilos.texto}> {"Usuario: " + usuario.usuario} </Text>
-							<Text style={estilos.texto}> {"UID: " + usuario.UID} </Text>
-							<Text style={estilos.texto}> {"Email: " + usuario.email} </Text>
-							<Text style={estilos.texto}> {"Genero: " + usuario.genero} </Text>
-							<Text style={estilos.texto}> {"Atrasados: " + usuario.atrasados} </Text>
-							<Text style={estilos.texto}> {"Reservados: " + usuario.reservados} </Text>
-						</Pressable>
+							activeOpacity={0.7}
+						>	
+							<View style={{flexDirection: "row"}}>
+								<Text style={estilos.texto3}> Usuário: </Text>
+								<Text style={estilos.texto}>{usuario.usuario} </Text>
+							</View>
+							<View style={{flexDirection: "row"}}>
+								<Text style={estilos.texto3}> ID: </Text>
+								<Text style={estilos.texto}>{usuario.UID} </Text>
+							</View>
+							<View style={{flexDirection: "row"}}>
+								<Text style={estilos.texto3}> Email: </Text>
+								<Text style={estilos.texto}>{usuario.email} </Text>
+							</View>
+							<View style={{flexDirection: "row"}}>
+								<Text style={estilos.texto3}> Gênero: </Text>
+								<Text style={estilos.texto}>{usuario.genero} </Text>
+							</View>
+							<View style={{flexDirection: "row"}}>
+								<Text style={estilos.texto3}> Atrasados: </Text>
+								<Text style={estilos.texto}>{usuario.atrasados} </Text>
+							</View>
+							<View style={{flexDirection: "row"}}>
+								<Text style={estilos.texto3}> Reservados: </Text>
+								<Text style={estilos.texto}>{usuario.reservados} </Text>
+							</View>
+						</TouchableOpacity>
 					))}
 				</ScrollView>
 			</View>	
@@ -82,4 +105,3 @@ class Usuarios extends React.Component{
 }
 
 export default Usuarios;
-

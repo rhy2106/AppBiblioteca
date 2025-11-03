@@ -1,7 +1,9 @@
 import React from "react";
 import { View, Text, TextInput, Pressable, Alert, TouchableOpacity, StyleSheet } from "react-native";
 import { ip,hash } from "../model/";
-import { estilos } from "../styles/Estilos";
+import { estilos } from "../styles/CadastroStyles";
+import Entypo from '@expo/vector-icons/Entypo';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 class Cadastro extends React.Component {
 	constructor(props) {
@@ -41,49 +43,64 @@ class Cadastro extends React.Component {
 		const options = ["Homem", "Mulher"];
 		return (
 			<View style={estilos.container}>
-				<Text style={estilos.titulo} >Cadastro</Text>
-				<View style={estilos.inline}>
-					<Text style={estilos.texto}>Nome:</Text>
-					<TextInput
-						style={estilos.input}
-						onChangeText={(usuario) => this.setState({ usuario })}
-					/>
+				<View style={estilos.caixa}>
+					<Text style={estilos.titulo} >Cadastro</Text>
+					<View style={estilos.inline}>
+						<View style={estilos.linha}>
+							<FontAwesome style={estilos.icon} name="user" size={15} color="white" />
+							<Text style={estilos.texto}>Nome:</Text>
+						</View>
+						<TextInput
+							style={estilos.input}
+							onChangeText={(usuario) => this.setState({ usuario })}
+						/>
+					</View>
+					<View style={estilos.inline}>
+						<View style={estilos.linha}>
+							<Entypo style={estilos.icon} name="email" size={15} color="white" />
+							<Text style={estilos.texto}>Email:</Text>
+						</View>
+						<TextInput
+							style={estilos.input}
+							onChangeText={(email) => this.setState({ email })}
+						/>
+						
+					</View>
+					<View style={estilos.inline}>
+						<View style={estilos.linha}>
+							<Entypo style={estilos.icon} name="lock" size={15} color="white" />
+							<Text style={estilos.texto}>Senha:</Text>
+						</View>
+						<TextInput secureTextEntry={true}
+							style={estilos.input}
+							onChangeText={(senha) => this.setState({ senha }) }
+						/>
+					</View>
+					<View style={estilos.inline2}>
+						{options.map((option) => {
+							const isSelected = this.state.genero === option;
+							return (
+								<TouchableOpacity 
+									key={option}
+									style={[estilos.botao3, isSelected ? estilos.selecionado : estilos.nao_selecionado]}
+									onPress={() => this.setState({ genero: option })}
+									activeOpacity={0.7}
+								>
+									 <Text style={[estilos.texto2, isSelected ? { color: "white" } : { color: "#ac5f32ff" }]}>
+										{option}
+									</Text>
+								</TouchableOpacity>
+							);
+						})}
+					</View>
+					<TouchableOpacity 
+						style={estilos.botao}
+						onPress={()=>this.gravar()}
+						activeOpacity={0.7}
+					>
+						<Text style={estilos.texto3}> {"Cadastrar"} </Text>
+					</TouchableOpacity>
 				</View>
-				<View style={estilos.inline}>
-					<Text style={estilos.texto}>Email:</Text>
-					<TextInput
-						style={estilos.input}
-						onChangeText={(email) => this.setState({ email })}
-					/>
-					
-				</View>
-				<View style={estilos.inline}>
-					<Text style={estilos.texto}>Senha:</Text>
-					<TextInput
-						style={estilos.input}
-						onChangeText={(senha) => this.setState({ senha })}
-					/>
-				</View>
-				<View style={estilos.inline}>
-					{options.map((option) => {
-						const isSelected = this.state.genero === option;
-						return (
-							<TouchableOpacity
-								key={option}
-								style={[estilos.botao, isSelected ? estilos.selecionado : estilos.nao_selecionado]}
-								onPress={() => this.setState({ genero: option })}
-							>
-								<Text style={estilos.texto}>{option}</Text>
-							</TouchableOpacity>
-						);
-					})}
-				</View>
-				<Pressable
-					style={estilos.botao}
-					onPress={()=>this.gravar()}
-				>
-					<Text style={estilos.texto}> {"Cadastrar"} </Text>
-				</Pressable>
 			</View>
 		);
 	}

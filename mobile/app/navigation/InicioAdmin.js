@@ -20,48 +20,59 @@ class InicioAdmin extends React.Component{
 		return(
 			<Tab.Navigator
 				screenOptions={{
-					headerStyle: { backgroundColor: cor_header },
-					headerTintColor: cor_letra,
-
+					headerStyle: { backgroundColor: "#e38652" },
+					headerTintColor: "white",
 					tabBarStyle: { backgroundColor: cor_header },
 					tabBarActiveTintColor: cor_tab,
 					tabBarInactiveTintColor: cor_letra,
 				}}
 			>
-				<Tab.Screen name="estoque" component={Estoque}
+				<Tab.Screen name="Estoque" component={Estoque}
 				   initialParams={{
 					   	usuario: this.state.usuario
 				   }}
 				   options={{
-						tabBarLabel: "estoque",
+						tabBarLabel: "Estoque",
 						tabBarIcon:({color,size}) => (<FontAwesome name="home" color={color} size={size}/>),
+						headerLeft: () => (
+							<FontAwesome name="home" size={24} color="white"style={{marginLeft: 15,marginRight:5}}/>
+						),
 				  }}
 				/>
-				<Tab.Screen name="registrar" component={Registrar}
+				<Tab.Screen name="Registrar" component={Registrar}
 				   initialParams={{
 						usuario:this.state.usuario,
 				   }}
 				   options={{
 						tabBarLabel: "Registrar",
 						tabBarIcon:({color,size}) => (<FontAwesome name="pencil" color={color} size={size}/>),
+						headerLeft: () => (
+							<FontAwesome name="pencil" size={24} color="white"style={{marginLeft: 15,marginRight:5}}/>
+						),
 				  }}
 				/>
-				<Tab.Screen name="recepcao" component={Recepcao}
+				<Tab.Screen name="Recepção" component={Recepcao}
 				   initialParams={{
 						usuario:this.state.usuario,
 				   }}
 				   options={{
-						tabBarLabel: "Recepcao",
+						tabBarLabel: "Recepção",
 						tabBarIcon:({color,size}) => (<FontAwesome name="book" color={color} size={size}/>),
+						headerLeft: () => (
+							<FontAwesome name="book" size={24} color="white"style={{marginLeft: 15,marginRight:5}}/>
+						),
 				  }}
 				/>
-				<Tab.Screen name="usuarios" component={Usuarios}
+				<Tab.Screen name="Usuários" component={Usuarios}
 				   initialParams={{
 						usuario:this.state.usuario,
 				   }}
 				   options={{
-						tabBarLabel: "gerenciar usuarios",
+						tabBarLabel: "Usuários",
 						tabBarIcon:({color,size}) => (<FontAwesome name="users" color={color} size={size}/>),
+						headerLeft: () => (
+							<FontAwesome name="users" size={24} color="white"style={{marginLeft: 15,marginRight:5}}/>
+						),
 				  }}
 				/>
 			</Tab.Navigator>

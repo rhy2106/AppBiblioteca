@@ -1,7 +1,8 @@
 import React from "react";
-import { View, Text, TextInput, Button, ScrollView, Alert, Pressable} from "react-native";
+import { View, Text, TextInput, Button, ScrollView, Alert, Pressable,StyleSheet, TouchableOpacity} from "react-native";
 import { ip } from "../model/";
-import { estilos } from "../styles/Estilos";
+import { estilos } from "../styles/ListaStyles";
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 class Lista extends React.Component{
 	constructor(props){
@@ -68,21 +69,35 @@ class Lista extends React.Component{
 							key={index}
 							style={estilos.scroll_item_inline}
 						>
-							<Pressable style={estilos.scroll_button}
+							<TouchableOpacity style={estilos.scroll_button}
+							activeOpacity={0.7}
 								onPress={()=>this.props.navigation.navigate("Livro",{usuario:this.state.usuario,livro})}
 							>
-								<Text style={estilos.texto}> Nome: {livro.nome}</Text>
-								<Text style={estilos.texto}> Autor: {livro.autor}</Text>
-								<Text style={estilos.texto}> Gênero: {livro.genero}</Text>
-								<Text style={estilos.texto}> Nota: {livro.nota}</Text>
-							</Pressable>
+							<View style={{flexDirection:"row"}}>
+								<Text style={estilos.texto3}> Nome: </Text>
+								<Text style={estilos.texto2} >{livro.nome}</Text>
+							</View>
+							<View style={{flexDirection:"row"}}>
+								<Text style={estilos.texto3}> Autor: </Text>
+								<Text style={estilos.texto2} >{livro.autor}</Text>
+							</View>
+							<View style={{flexDirection:"row"}}>
+								<Text style={estilos.texto3}> Gênero: </Text>
+								<Text style={estilos.texto2} >{livro.genero}</Text>
+							</View>
+							<View style={{flexDirection:"row"}}>
+								<Text style={estilos.texto3}> Nota: </Text>
+								<Text style={estilos.texto2} >{livro.nota}</Text>
+							</View>
+							</TouchableOpacity>
 
-							<Pressable
+							<TouchableOpacity
+								activeOpacity={0.7}
 								style={estilos.scroll_remove_button}
 								onPress={()=>this.remover(livro)}
 							>
-								<Text style={estilos.texto}> Remover da lista </Text>
-							</Pressable>
+								<FontAwesome name="trash" size={21} color="white" />
+							</TouchableOpacity>
 								
 						</View>
 					))}

@@ -1,7 +1,7 @@
 import React from "react";
-import { View, Text, TextInput, Button, ScrollView, Alert, Pressable} from "react-native";
+import { View, Text, TextInput, Button, ScrollView, Alert, Pressable,StyleSheet, TouchableOpacity} from "react-native";
 import { ip } from "../model/";
-import { estilos } from '../styles/Estilos';
+import { estilos } from '../styles/EstoqueStyles';
 
 class Estoque extends React.Component{
 	constructor(props){
@@ -48,28 +48,50 @@ class Estoque extends React.Component{
 					<TextInput
 						style={estilos.input}
 						onChangeText={(texto)=>this.setState({pesquisa:texto})}
+						placeholder="Livro, autor, gênero" 
+						placeholderTextColor="gray" 
 					/>
-					<Pressable
+					<TouchableOpacity
 						style={estilos.botao}
 						onPress={() => this.pesquisar()}
+						activeOpacity={0.7}
 					>
 						<Text style={estilos.texto}> {"Pesquisar"} </Text>
-					</Pressable>
+					</TouchableOpacity>
 				</View>
 				<ScrollView style={estilos.scroll}>
 					{this.state.resultados.map((livro, index) => (
-						<Pressable
+						<TouchableOpacity
 							key={index}
 							style={estilos.scroll_item}
 							onPress={()=>this.props.navigation.navigate("Livro",{usuario:this.state.usuario,livro})}
+							activeOpacity={0.7}	
 						>
-							<Text style={estilos.texto}> Nome: {livro.nome}</Text>
-							<Text style={estilos.texto}> Autor: {livro.autor}</Text>
-							<Text style={estilos.texto}> Gênero: {livro.genero}</Text>
-							<Text style={estilos.texto}> Nota: {livro.nota}</Text>
-							<Text style={estilos.texto}> Quantidade: {livro.quantidade}</Text>
-							<Text style={estilos.texto}> Disponiveis: {livro.disponiveis}</Text>
-						</Pressable>
+							<View style={{flexDirection:"row"}}>
+								<Text style={estilos.texto3}> Nome: </Text>
+								<Text style={estilos.texto2} >{livro.nome}</Text>
+							</View>
+							<View style={{flexDirection:"row"}}>
+								<Text style={estilos.texto3}> Autor: </Text>
+								<Text style={estilos.texto2} >{livro.autor}</Text>
+							</View>
+							<View style={{flexDirection:"row"}}>
+								<Text style={estilos.texto3}> Gênero: </Text>
+								<Text style={estilos.texto2} >{livro.genero}</Text>
+							</View>
+							<View style={{flexDirection:"row"}}>
+								<Text style={estilos.texto3}> Nota: </Text>
+								<Text style={estilos.texto2} >{livro.nota}</Text>
+							</View>
+							<View style={{flexDirection:"row"}}>
+								<Text style={estilos.texto3}> Quantidade: </Text>
+								<Text style={estilos.texto}>{livro.quantidade}</Text>
+							</View>
+							<View style={{flexDirection:"row"}}>
+								<Text style={estilos.texto3}> Disponíveis: </Text>
+								<Text style={estilos.texto}>{livro.disponiveis}</Text>
+							</View>
+						</TouchableOpacity>
 					))}
 				</ScrollView>
 			</View>	
@@ -78,4 +100,3 @@ class Estoque extends React.Component{
 }
 
 export default Estoque;
-

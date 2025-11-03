@@ -18,61 +18,75 @@ class Inicio extends React.Component{
 		return(
 			<Tab.Navigator
 				screenOptions={{
-					headerStyle: { backgroundColor: cor_header },
-					headerTintColor: cor_letra,
-
-					tabBarStyle: { backgroundColor: cor_header },
+					headerStyle: { backgroundColor: "#e38652" },
+					headerTintColor: "white",
+					tabBarStyle: { backgroundColor: "white" },
 					tabBarActiveTintColor: cor_tab,
 					tabBarInactiveTintColor: cor_letra,
 				}}
 			>
-				<Tab.Screen name="home" component={Principal}
+				<Tab.Screen name="Home" component={Principal} 
 				   initialParams={{
 						usuario:this.state.usuario,
 				   }}
 				   options={{
 						tabBarLabel: "Home",
 						tabBarIcon:({color,size}) => (<FontAwesome name="home" color={color} size={size}/>),
+						headerLeft: () => (
+							<FontAwesome name="home" size={24} color="white"style={{marginLeft: 15,marginRight:5}}/>
+						),
 					  }}
 				/>
 
-				<Tab.Screen name="lista" component={Lista}
+				<Tab.Screen name="Lista" component={Lista}
 				   initialParams={{
 						usuario:this.state.usuario,
 				   }}
 				   options={{
 						tabBarLabel: "Lista",
 						tabBarIcon:({color,size}) => (<FontAwesome name="bookmark" color={color} size={size}/>),
+						headerLeft: () => (
+							<FontAwesome name="bookmark" color="white" size={24} style={{marginLeft: 15,marginRight:5}}/>
+						),
 					  }}
 				/>
 
-				<Tab.Screen name="perfil" component={Perfil}
+				<Tab.Screen name="Perfil" component={Perfil}
 				   initialParams={{
 						usuario:this.state.usuario,
 				   }}
 				   options={{
 						tabBarLabel: "Perfil",
 						tabBarIcon:({color,size}) => (<FontAwesome name="user-circle" color={color} size={size}/>),
+						headerLeft: () => (
+							<FontAwesome name="user-circle" color="white" size={24} style={{marginLeft: 15,marginRight:5}}/>
+						),
 					  }}
 				/>
 
-				<Tab.Screen name="tinder" component={Tinder}
+				<Tab.Screen name="Tinder" component={Tinder}
 				   initialParams={{
 						usuario:this.state.usuario,
 				   }}
 				   options={{
 						tabBarLabel: "Tinder",
 						tabBarIcon:({color,size}) => (<FontAwesome name="user-plus" color={color} size={size}/>),
+						headerLeft: () => (
+							<FontAwesome name="user-plus" color="white" size={24} style={{marginLeft: 15,marginRight:5}}/>
+						),
 					  }}
 				/>
 			
-				<Tab.Screen name="fila" component={Fila}
+				<Tab.Screen name="Fila" component={Fila}
 				   initialParams={{
 						usuario:this.state.usuario,
 				   }}
 				   options={{
 						tabBarLabel: "Fila",
 						tabBarIcon:({color,size}) => (<FontAwesome name="file-text" color={color} size={size}/>),
+						headerLeft: () => (
+							<FontAwesome name="file-text" color="white" size={24} style={{marginLeft: 15,marginRight:5}}/>
+						),
 					  }}
 				/>
 				

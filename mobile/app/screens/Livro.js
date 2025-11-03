@@ -1,7 +1,9 @@
 import React from "react";
-import { View, Text, TextInput, Button, Alert, TouchableOpacity, StyleSheet, ScrollView, Pressable } from "react-native";
+import { View, Text, TextInput, Button, Alert, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import { ip } from '../model/';
-import { estilos } from '../styles/Estilos';
+import { estilos } from '../styles/LivroStyles';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 class Livro extends React.Component {
 	constructor(props) {
@@ -113,35 +115,53 @@ class Livro extends React.Component {
 		return (
 			<View style={estilos.container}>
 				<Text style={estilos.titulo}> {this.state.livro.nome} </Text>
-				<View>
-					<Text style={estilos.texto}> {"Autor: " + this.state.livro.autor} </Text>
-					<Text style={estilos.texto}> {"Genero: " + this.state.livro.genero} </Text>
-					<Text style={estilos.texto}> {"Avalição: " + this.state.livro.nota} </Text>
+				<View style={estilos.linha}/>
+				<View style={estilos.box}>
+					<View style={estilos.row}>
+						<Text style={estilos.texto}> Autor: </Text> 
+						<Text style={estilos.texto4}>{this.state.livro.autor} </Text>
+					</View>
+					<View style={estilos.row}>
+						<Text style={estilos.texto}> Gênero: </Text> 
+						<Text style={estilos.texto4}>{this.state.livro.genero} </Text>
+					</View>
+					<View style={estilos.row}>
+						<Text style={estilos.texto}> Avaliação: </Text> 
+						<Text style={estilos.texto4}>{this.state.livro.nota} </Text>
+					</View>
+					<View style={estilos.row}>
+						<Text style={estilos.texto}> Descrição: </Text> 
+						<Text style={estilos.texto4}>{this.state.livro.descricao} </Text>
+					</View>
 				</View>
-				<Text style={estilos.texto}> {"Descricao:"} </Text>
-				<Text style={estilos.texto}> {this.state.livro.descricao} </Text>
+				
 
-				<Pressable
-					style={estilos.botao}
+				<TouchableOpacity
+					style={estilos.botao2}
 					onPress={()=>this.adicionarLista()}
-				>
-					<Text style={estilos.texto}> Adicionar a Lista </Text>
-				</Pressable>
-				<Pressable
-					style={estilos.botao}	
+					activeOpacity={0.7}
+				>	
+					<FontAwesome name="bookmark" color="white" size={16} style={{marginLeft: 15,marginRight:5}}/>
+					<Text style={estilos.texto2}>Listar</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={estilos.botao3}	
 					onPress={() => this.reservar()}
+					activeOpacity={0.7}
 				>
-					<Text style={estilos.texto}> {"Reservar"} </Text>
-				</Pressable>	
+					<Text style={estilos.texto3}> {"Reservar"} </Text>
+				</TouchableOpacity>	
 					
 				<ScrollView style={estilos.scroll} >
-					<Text style={estilos.titulo}> Comentarios </Text>
+					<Text style={estilos.titulo2}> Comentários </Text>
 					<View style={estilos.scroll_item}>
 						<View style={estilos.inline}>
 							<TextInput
 								multiline
 								style={estilos.comentario}
 								value={this.state.comentario}
+								placeholder="Achei ótimo!" 
+								placeholderTextColor="gray" 
 								onChangeText={(comentario)=>{this.setState({comentario})}}
 							/>
 						</View>
@@ -149,21 +169,22 @@ class Livro extends React.Component {
 							{nota.map((o)=>{
 								return (
 									<TouchableOpacity
-										style={[estilos.botao,this.state.nota >= o ? estilos.selecionado : estilos.nao_selecionado]}
+										style={estilos.botao4}
 										key={o}
 										onPress={()=>this.setState({nota:o})}
 									>
-										<Text style={estilos.texto}> {o} </Text>
+										<AntDesign name="star" size={40} color={this.state.nota >= o ? "#ffd800" : "white"} />
 									</TouchableOpacity>
 								)
 							})}
-							<Pressable
+						</View>
+						<TouchableOpacity
 								style={estilos.botao}
 								onPress={()=>this.comentar()}
+								activeOpacity={0.7}
 							>
 								<Text style={estilos.texto}> {"Comentar"} </Text>
-							</Pressable>
-						</View>
+							</TouchableOpacity>
 					</View>
 					{this.state.avaliacoes.map((comentario,index) => (
 						<View style={estilos.scroll_item} key={index}>

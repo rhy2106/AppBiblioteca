@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, TextInput, Button, Alert, TouchableOpacity, StyleSheet, ScrollView, Pressable} from "react-native";
 import { ip } from '../model/';
-import { estilos } from "../styles/Estilos";
+import { estilos } from "../styles/RecepcaoStyles";
 
 class Recepcao extends React.Component {
 	constructor(props) {
@@ -30,7 +30,7 @@ class Recepcao extends React.Component {
 			} else
 				Alert.alert("Erro", data.mensagem);
 		} catch(err){
-			Alert.alert("Erro", err.message);
+			Alert.alert("Erro", "Não foi possível conectar ao servidor");
 		}
 	}
 
@@ -44,7 +44,6 @@ class Recepcao extends React.Component {
 				body: JSON.stringify({ UID, FID }),
 			});
 			const data = await res.json();
-			console.log(data);
 			if(data.success){
 				Alert.alert("Sucesso", data.mensagem);
 			}else
@@ -63,43 +62,50 @@ class Recepcao extends React.Component {
 						const selecionado = this.state.opcao;
 						return (
 							<TouchableOpacity
-								style={[estilos.botao,this.state.opcao === o ? estilos.selecionado : estilos.nao_selecionado]}
+								style={[estilos.botao2,this.state.opcao === o ? estilos.selecionado : estilos.nao_selecionado]}
 								key={o}
 								onPress={()=>this.setState({opcao:o})}
+								activeOpacity={0.7}
 							>
-								<Text style={estilos.texto}> {o} </Text>
+								<Text style={estilos.texto2}> {o} </Text>
 							</TouchableOpacity>	
 						);
 					})}
 				</View>
+				<View style={estilos.box}>
+				<Text style={estilos.titulo}>{this.state.opcao == "Emprestar" ? "Empréstimo" : "Devolução"}</Text>
+				<View style={estilos.linha}/>
+					<View style={estilos.inline2}>
+						<TextInput
+							style={estilos.input}
+							value={this.state.UID}
+							onChangeText={(UID) => this.setState({ UID })}
+							placeholder="ID do Usuário" 
+							placeholderTextColor="gray" 
+						/>
+					</View>
 
-				<View style={estilos.inline}>
-					<Text style={estilos.texto}>UID</Text>
-					<TextInput
-						style={estilos.input}
-						value={this.state.UID}
-						onChangeText={(UID) => this.setState({ UID })}
-					/>
+					<View style={estilos.inline2}>
+						<TextInput
+							style={estilos.input}
+							value={this.state.FID}
+							onChangeText={(FID) => this.setState({ FID })}
+							placeholder="ID do Livro Físico" 
+							placeholderTextColor="gray" 
+						/>
+					</View>
+
+					<TouchableOpacity
+						style={estilos.botao}
+						onPress={() =>{this.state.opcao == "Emprestar" ? this.emprestar() : this.devolver()}}
+						activeOpacity={0.7}
+					>
+						<Text style={estilos.texto3}>
+							{this.state.opcao == "Emprestar" ? "Emprestar" : "Devolver"}
+						</Text>
+						
+					</TouchableOpacity>
 				</View>
-
-				<View style={estilos.inline}>
-					<Text style={estilos.texto}>FID</Text>
-					<TextInput
-						style={estilos.input}
-						value={this.state.FID}
-						onChangeText={(FID) => this.setState({ FID })}
-					/>
-				</View>
-
-				<Pressable
-					style={estilos.botao}
-					onPress={() =>{this.state.opcao == "Emprestar" ? this.emprestar() : this.devolver()}}
-				>
-					<Text style={estilos.texto}>
-						{this.state.opcao == "Emprestar" ? "Emprestar" : "Devolver"}
-					</Text>
-					
-				</Pressable>
 			</View>
 		);
 	}

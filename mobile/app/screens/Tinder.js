@@ -1,7 +1,8 @@
 import React from "react";
-import { View, Text, TextInput, Button, ScrollView, Alert, Pressable} from "react-native";
+import { View, Text, TextInput, Button, ScrollView, Alert, TouchableOpacity, StyleSheet} from "react-native";
 import { ip } from "../model/";
-import { estilos } from "../styles/Estilos";
+import { estilos } from "../styles/TinderStyles";
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 class Tinder extends React.Component{
 	constructor(props){
@@ -70,41 +71,58 @@ class Tinder extends React.Component{
 		const options = ["Homem", "Mulher"];
 		return(
 			<View style={estilos.container}>
+				<Text style={estilos.titulo}>Escolha o gênero do seu parceiro(a)</Text>
 				<View style={estilos.inline}>
 					{options.map((o)=>(
-						<Pressable
-							style={[estilos.botao, (this.state.preferencia === o ? estilos.selecionado : estilos.nao_selecionado)]}
+						<TouchableOpacity
+							style={[estilos.botao2, (this.state.preferencia === o ? estilos.selecionado : estilos.nao_selecionado)]}
 							key={o}
 							onPress={()=>this.setState({preferencia:o})}
+							activeOpacity={0.7}
 						>
-							<Text style={estilos.texto}>
+							
+							<Text style={estilos.texto2}>
 								{o}
 							</Text>
-						</Pressable>
+						</TouchableOpacity>
 					))}
 					</View>
-				<Pressable
-					style={estilos.botao}
-					onPress={()=>this.match()}
-				>
-					<Text style={estilos.texto}> { "Match ( 5 pontos )" } </Text>
-				</Pressable>
+					<TouchableOpacity
+						style={estilos.botao}
+						onPress={()=>this.match()}
+						activeOpacity={0.7}
+					>
+						<Text style={estilos.texto3}> { "Match (-5pts)" } </Text>
+					</TouchableOpacity>
 
 				<ScrollView style={estilos.scroll}>
 					{ this.state.procurando &&
 						<View style={estilos.scroll_item}>
-							<Text style={estilos.texto}> {"Procurando Match"} </Text>
+							<Text style={estilos.texto}> {"Você está na fila para o Match!"} </Text>
 						</View>
 					}
 					{(this.state.matchs || []).map((match,index)=>(
 						<View 
 							style={estilos.scroll_item}
 							key={index}
-						>
-							<Text style={estilos.texto} > {match.usuario} </Text>
-							<Text style={estilos.texto} > {match.email} </Text>
-							<Text style={estilos.texto} > {"Sala " + match.sala} </Text>
-							<Text style={estilos.texto} > {match.dia} </Text>
+						>	
+							<Text style={estilos.encontro}> • Encontro {index+1}</Text>
+							<View style={estilos.row}>
+								<Text style={estilos.texto5}> Nome: </Text>
+								<Text style={estilos.texto}> {match.usuario} </Text>
+							</View>
+							<View style={estilos.row}>
+								<Text style={estilos.texto5}> Email: </Text>
+								<Text style={estilos.texto} > {match.email} </Text>
+							</View>
+							<View style={estilos.row}>
+								<Text style={estilos.texto5}> Sala: </Text>
+								<Text style={estilos.texto} > {match.sala} </Text>		
+							</View>
+							<View style={estilos.row}> 
+								<Text style={estilos.texto5}> Data: </Text>
+								<Text style={estilos.texto} > {match.dia} </Text>
+							</View>
 						</View>
 					))}
 				</ScrollView>

@@ -51,7 +51,7 @@ app.post('/pesquisa',async (req,res) => {
 					"Livros".nome AS nome,
 					"Livros".autor AS autor,
 					"Livros".genero AS genero,
-					"Livros".descricao,
+					"Livros".descricao AS descricao,
 					COALESCE(q.quantidade,0) AS quantidade,
 					COALESCE(d.disponiveis,0) AS disponiveis,
 					COALESCE(a.nota, 0) AS nota
@@ -84,7 +84,7 @@ app.post('/pesquisa',async (req,res) => {
 					"Livros".nome AS nome,
 					"Livros".autor AS autor,
 					"Livros".genero AS genero,
-					"Livros".descricao,
+					"Livros".descricao AS descricao,
 					COALESCE(q.quantidade,0) AS quantidade,
 					COALESCE(d.disponiveis,0) AS disponiveis,
 					COALESCE(a.nota, 0) AS nota
@@ -454,6 +454,7 @@ app.post('/lista', async (req,res) => {
 				"Livros".nome AS nome,
 				"Livros".autor AS autor,
 				"Livros".genero AS genero,
+				"Livros".descricao AS descricao,
 				COALESCE(a.nota, 0) AS nota
 			FROM "Lista"
 				JOIN "Livros"

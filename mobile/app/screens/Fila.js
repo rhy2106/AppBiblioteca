@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, TextInput, Button, ScrollView, Alert, Pressable} from "react-native";
 import { ip } from "../model/";
-import { estilos } from "../styles/Estilos";
+import { estilos } from "../styles/FilaStyles";
 
 class Fila extends React.Component{
 	constructor(props){
@@ -64,28 +64,48 @@ class Fila extends React.Component{
 			<View style={estilos.container}>
 				<ScrollView style={ estilos.scroll }>
 					<Text style={estilos.titulo}> Livros Reservados </Text>
+					<View style={estilos.linha}/>
 					{this.state.livros_reservados.map((livro,index)=>(
 						<View
 							style={estilos.scroll_item}
 							key={index}
 						>
-							<Text style={estilos.texto} > {livro.nome} </Text>
-							<Text style={estilos.texto} > {livro.autor} </Text>
-							<Text style={estilos.texto} >
-								{ livro.disponiveis >= livro.posicao ? " Disponivel" : " Indisponivel"}
+							<Text style={estilos.texto3} > {livro.nome} </Text>
+							<Text style={estilos.texto2} > {livro.autor} </Text>
+							<Text style={estilos.texto2} >
+								{ livro.disponiveis >= livro.posicao ? " Disponível" : " Indisponível"}
 							</Text>
 						</View>
 					))}
+					<View style={estilos.linha2}/>
 					<Text style={estilos.titulo}> Livros Emprestados </Text>
+					{/* <View style={estilos.scroll_item}>
+						<Text style={estilos.texto3} > livro.nome </Text>                Eu fiz a parte debaixo com esse exemplo pq n consegui pegar livro emprestado!!
+						<Text style={estilos.texto2} > livro.autor </Text>
+						<View style={{flexDirection:"row"}}>
+							<Text style={estilos.texto2}> {"Empréstimo: "} </Text>
+							<Text style={estilos.texto4}>12/12/34/-5352h</Text>
+						</View>
+						<View style={{flexDirection:"row"}}>
+							<Text style={estilos.texto2}> {"Prazo: "} </Text>
+							<Text style={estilos.texto4}>12/12/34/-5352h</Text>
+						</View>
+					</View> */}
 					{this.state.livros_emprestados.map((livro,index)=>(
 						<View 
 							style={estilos.scroll_item}
 							key={index}
 						>
-							<Text style={estilos.texto} > {livro.nome} </Text>
-							<Text style={estilos.texto} > {livro.autor} </Text>
-							<Text style={estilos.texto} > {"Emprestimo: " + new Date(livro.Emprestimo).toLocaleDateString('pt-BR')} </Text>
-							<Text style={estilos.texto} > {"Prazo: " + new Date(livro.Prazo).toLocaleDateString('pt-BR')} </Text>
+							<Text style={estilos.texto3} > {livro.nome} </Text>
+							<Text style={estilos.texto2} > {livro.autor} </Text>
+							<View style={{flexDirection:"row"}}>
+								<Text style={estilos.texto2}>Empréstimo: </Text>
+								<Text style={estilos.texto4} > {new Date(livro.Emprestimo).toLocaleDateString('pt-BR')} </Text>
+							</View>
+							<View style={{flexDirection:"row"}}>
+								<Text style={estilos.texto2} >Prazo: </Text>
+								<Text style={estilos.texto4} > {new Date(livro.Prazo).toLocaleDateString('pt-BR')} </Text>
+							</View>
 						</View>
 					))}
 				</ScrollView>
@@ -95,4 +115,3 @@ class Fila extends React.Component{
 }
 
 export default Fila;
-
